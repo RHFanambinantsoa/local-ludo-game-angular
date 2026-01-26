@@ -1,0 +1,37 @@
+.typing_container {
+  height: 60px;
+  margin: 50px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.6196078431);
+  color: #920a93;
+  h3 {
+    margin: 10px 2px;
+    font-family: "IBM Plex Mono", serif;
+    font-weight: bold;
+    font-size: 30px;
+    font-style: normal;
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+  }
+  .cursor {
+    width: 3px;
+    height: 35px;
+    background: black;
+    animation: curseur 0.5s ease infinite;
+  }
+  @keyframes curseur {
+    0% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+}
