@@ -1,0 +1,54 @@
+<div class="dice_section" [ngClass]="{ left: leftSide }">
+  <div class="animation_container">
+    <div *ngIf="diceValue == 6" class="reaction_container">react</div>
+    <div *ngIf="diceValue" class="reaction_container">
+      <p>{{ leftSide ? "right arrow" : "left arrow" }}</p>
+    </div>
+  </div>
+  <button class="image_container" [disabled]="!diceValue" (click)="rollDice()">
+    <ng-container *ngIf="diceValue">
+      <img
+        src="../../assets/dice-roll.gif"
+        alt=""
+        *ngIf="diceRolled"
+        [ngClass]="{ animate: diceRolled }"
+      />
+
+      <ng-container *ngIf="!diceRolled">
+        <div *ngIf="diceValue == 1" class="face face-1">
+          <div class="dot center"></div>
+        </div>
+        <div *ngIf="diceValue == 2" class="face face-2">
+          <div class="dot top-left"></div>
+          <div class="dot bottom-right"></div>
+        </div>
+        <div *ngIf="diceValue == 3" class="face face-3">
+          <div class="dot top-left"></div>
+          <div class="dot center"></div>
+          <div class="dot bottom-right"></div>
+        </div>
+        <div *ngIf="diceValue == 4" class="face face-4">
+          <div class="dot top-left"></div>
+          <div class="dot top-right"></div>
+          <div class="dot bottom-left"></div>
+          <div class="dot bottom-right"></div>
+        </div>
+        <div *ngIf="diceValue == 5" class="face face-5">
+          <div class="dot top-left"></div>
+          <div class="dot top-right"></div>
+          <div class="dot center"></div>
+          <div class="dot bottom-left"></div>
+          <div class="dot bottom-right"></div>
+        </div>
+        <div *ngIf="diceValue == 6" class="face face-6">
+          <div class="dot top-left"></div>
+          <div class="dot top-right"></div>
+          <div class="dot middle-left"></div>
+          <div class="dot middle-right"></div>
+          <div class="dot bottom-left"></div>
+          <div class="dot bottom-right"></div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </button>
+</div>

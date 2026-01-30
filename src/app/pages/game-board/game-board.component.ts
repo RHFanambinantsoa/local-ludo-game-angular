@@ -22,15 +22,36 @@ import { ChoosePlayersModalComponent } from '../../components/choose-players-mod
 import { AnimatedTextComponent } from '../../components/animated-text-component/animated-text.component';
 import { PlayerZoneComponent } from '../../components/player-zone-component/player-zone.component';
 import { PLAYER_COLOR } from '../../enums/PlayerColor.enum';
+import { DiceComponent } from '../../components/dice-component/dice.component';
 
 @Component({
   selector: 'app-game-board',
-  imports: [CommonModule, MatIconModule, MatButtonModule, PlayerZoneComponent],
+  imports: [
+    CommonModule,
+    MatIconModule,
+    MatButtonModule,
+    PlayerZoneComponent,
+    DiceComponent,
+  ],
   templateUrl: './game-board.component.html',
   styleUrl: './game-board.component.scss',
 })
 export class GameBoardComponent {
   PLAYER_COLOR = PLAYER_COLOR;
+  celebrate: boolean = true;
+
+  diceValue = 1;
+  turn: number = 0;
 
   ngOnInit() {}
+
+  isTurn(position: number) {
+    if (this.turn != position) return false;
+    return true;
+  }
+
+  nextPlayer() {
+    if (this.turn < 3) this.turn++;
+    else this.turn = 0;
+  }
 }

@@ -1,5 +1,6 @@
 <div class="game_container">
   <p>Gameboard</p>
+  <button (click)="nextPlayer()">next player</button>
   <!-- <div style="height: 200px">
       <p>
         id: {{ userStore.user.id }} <br />
@@ -20,21 +21,11 @@
     </div> -->
   <div class="board_section">
     <div class="dice_section">
-      <p>dés</p>
-
-      <!-- <DiceSectionComponent
-          :left="true"
-          :clickable="true"
-          :username="boardDisposition[0].username"
-          :color="boardDisposition[0].color"
-          :showDie="turn == 0"
-        />
-        <v-icon icon="mdi-arrow-left-bold" class="arrow" v-if="turn == 0"></v-icon>
-        <DiceSectionComponent
-          :username="boardDisposition[3].username"
-          :color="boardDisposition[3].color"
-          :showDie="turn == 3"
-        /> -->
+      <app-dice
+        [leftSide]="true"
+        [diceValue]="isTurn(0) ? diceValue : 0"
+      ></app-dice>
+      <app-dice [diceValue]="isTurn(1) ? diceValue : 0"></app-dice>
     </div>
     <div class="backdrop">
       <!-- <PawnComponent
@@ -43,7 +34,13 @@
       :pawnId="'BLUEpiece1'"
       :pawnInMove="pawnInMove"
       /> -->
-      <!-- <img src="@/assets/celebrate.gif" alt="" v-if="celebrate" :key="gifKey" class="celebrate" /> -->
+      <!-- <img
+        src="assets/celebrate.gif"
+        alt=""
+        *ngIf="celebrate"
+        :key="gifKey"
+        class="celebrate"
+      /> -->
       <div class="game_board_container">
         <div class="green_zone">
           <app-player-zone
@@ -86,21 +83,11 @@
       </div>
     </div>
     <div class="dice_section">
-      <p>dés</p>
-
-      <!-- <DiceSectionComponent
-          :left="true"
-          :clickable="true"
-          :username="boardDisposition[0].username"
-          :color="boardDisposition[0].color"
-          :showDie="turn == 0"
-        />
-        <v-icon icon="mdi-arrow-left-bold" class="arrow" v-if="turn == 0"></v-icon>
-        <DiceSectionComponent
-          :username="boardDisposition[3].username"
-          :color="boardDisposition[3].color"
-          :showDie="turn == 3"
-        /> -->
+      <app-dice
+        [leftSide]="true"
+        [diceValue]="isTurn(3) ? diceValue : 0"
+      ></app-dice>
+      <app-dice [diceValue]="isTurn(2) ? diceValue : 0"></app-dice>
     </div>
   </div>
 </div>
