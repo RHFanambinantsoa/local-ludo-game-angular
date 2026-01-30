@@ -45,9 +45,9 @@ export class HomeComponent {
       data: { players: this.players },
     });
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
       if (result !== undefined) {
         this.players.set(result);
+                
         console.log('mihidy', this.players());
       }
     });
