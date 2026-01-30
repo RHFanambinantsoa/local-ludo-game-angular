@@ -1,0 +1,106 @@
+<div class="game_container">
+  <p>Gameboard</p>
+  <!-- <div style="height: 200px">
+      <p>
+        id: {{ userStore.user.id }} <br />
+        pseudo: {{ userStore.user.username }} <br />
+        numero: {{ userStore.user.phoneNumber }}
+      </p>
+
+      <v-btn @click="setPawnMoveable()">
+        <span v-if="!pawnMoveable"> start moveable </span>
+        <span v-if="pawnMoveable"> stop moveable </span>
+      </v-btn>
+
+      <v-btn @click="setStartCase(27)">piece out</v-btn>
+      <v-btn @click="moveOneCase()">move one case</v-btn>
+      <v-btn @click="onGoBackHome()">Go back home</v-btn>
+      <v-btn @click="onMovePawn()">Move from 20 to PERSONAL 5 </v-btn>
+      <v-btn @click="onCelebrate()">Celebrate</v-btn>
+    </div> -->
+  <div class="board_section">
+    <div class="dice_section">
+      <p>dés</p>
+
+      <!-- <DiceSectionComponent
+          :left="true"
+          :clickable="true"
+          :username="boardDisposition[0].username"
+          :color="boardDisposition[0].color"
+          :showDie="turn == 0"
+        />
+        <v-icon icon="mdi-arrow-left-bold" class="arrow" v-if="turn == 0"></v-icon>
+        <DiceSectionComponent
+          :username="boardDisposition[3].username"
+          :color="boardDisposition[3].color"
+          :showDie="turn == 3"
+        /> -->
+    </div>
+    <div class="backdrop">
+      <!-- <PawnComponent
+      :pawnMoveable="pawnMoveable"
+      :color="PLAYER_COLOR.BLUE"
+      :pawnId="'BLUEpiece1'"
+      :pawnInMove="pawnInMove"
+      /> -->
+      <!-- <img src="@/assets/celebrate.gif" alt="" v-if="celebrate" :key="gifKey" class="celebrate" /> -->
+      <div class="game_board_container">
+        <div class="green_zone">
+          <app-player-zone
+            [position]="0"
+            [color]="PLAYER_COLOR.GREEN"
+          ></app-player-zone>
+        </div>
+        <div class="yellow_zone">
+          <app-player-zone
+            [position]="1"
+            [color]="PLAYER_COLOR.YELLOW"
+          ></app-player-zone>
+        </div>
+        <div class="arrival_zone">
+          <div class="triangle green">
+            <div id="GREEN6"></div>
+          </div>
+          <div class="triangle yellow">
+            <div id="YELLOW6"></div>
+          </div>
+          <div class="triangle blue">
+            <div id="BLUE6"></div>
+          </div>
+          <div class="triangle red">
+            <div id="RED6"></div>
+          </div>
+        </div>
+        <div class="blue_zone">
+          <app-player-zone
+            [position]="2"
+            [color]="PLAYER_COLOR.BLUE"
+          ></app-player-zone>
+        </div>
+        <div class="red_zone">
+          <app-player-zone
+            [position]="3"
+            [color]="PLAYER_COLOR.RED"
+          ></app-player-zone>
+        </div>
+      </div>
+    </div>
+    <div class="dice_section">
+      <p>dés</p>
+
+      <!-- <DiceSectionComponent
+          :left="true"
+          :clickable="true"
+          :username="boardDisposition[0].username"
+          :color="boardDisposition[0].color"
+          :showDie="turn == 0"
+        />
+        <v-icon icon="mdi-arrow-left-bold" class="arrow" v-if="turn == 0"></v-icon>
+        <DiceSectionComponent
+          :username="boardDisposition[3].username"
+          :color="boardDisposition[3].color"
+          :showDie="turn == 3"
+        /> -->
+    </div>
+  </div>
+</div>

@@ -1,0 +1,35 @@
+<div class="player_zone" [style.transform]="getTransformStyle()">
+  <div
+    [ngStyle]="styleObject.backgroundStyle"
+    [ngClass]="{ blink: blink }"
+    class="start_box"
+  >
+    <div [ngStyle]="styleObject.borderStyle">
+      <div class="start_point" *ngFor="let id of homePointsId">
+        <div
+          class="point"
+          [ngStyle]="styleObject.backgroundStyle"
+          [id]="id"
+        ></div>
+      </div>
+    </div>
+  </div>
+  <div class="cells_container">
+    <div
+      class="cell"
+      *ngFor="let cell of cells"
+      [id]="cell.id"
+      [ngClass]="{ enter_point: cell.enterCase }"
+      [ngStyle]="
+        cell.colored
+          ? styleObject.backgroundStyle
+          : cell.enterCase
+            ? styleObject.colorStyle
+            : null
+      "
+    >
+      <mat-icon *ngIf="cell.isSafeCase">star_rate</mat-icon>
+      <mat-icon *ngIf="cell.enterCase">arrow_upward</mat-icon>
+    </div>
+  </div>
+</div>

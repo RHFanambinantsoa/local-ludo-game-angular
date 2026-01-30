@@ -1,0 +1,36 @@
+import {
+  Component,
+  ElementRef,
+  inject,
+  signal,
+  ViewChild,
+} from '@angular/core';
+import { AssetsUrls } from '../../constants/AssetsUrl';
+import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogRef,
+  MatDialogTitle,
+} from '@angular/material/dialog';
+import { ChoosePlayersModalComponent } from '../../components/choose-players-modal/choose-players-modal.component';
+import { AnimatedTextComponent } from '../../components/animated-text-component/animated-text.component';
+import { PlayerZoneComponent } from '../../components/player-zone-component/player-zone.component';
+import { PLAYER_COLOR } from '../../enums/PlayerColor.enum';
+
+@Component({
+  selector: 'app-game-board',
+  imports: [CommonModule, MatIconModule, MatButtonModule, PlayerZoneComponent],
+  templateUrl: './game-board.component.html',
+  styleUrl: './game-board.component.scss',
+})
+export class GameBoardComponent {
+  PLAYER_COLOR = PLAYER_COLOR;
+
+  ngOnInit() {}
+}
