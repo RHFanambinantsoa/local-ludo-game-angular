@@ -7,13 +7,15 @@
   .board_section {
     display: flex;
     flex-direction: column;
-    border: 1px solid black;
+    border: 1px solid rgb(219, 49, 219);
+    padding: 2px;
+    border-radius: 5px;
     .dice_section {
       width: 100%;
       display: flex;
       align-items: end;
       justify-content: space-between;
-      background-color: aqua;
+      background-color: #d5e7e7;
       .arrow {
         font-size: 60px;
         color: rgb(163 131 6);
@@ -48,19 +50,15 @@
 
         .green_zone {
           grid-row: 1 / span 2;
-          background-color: green;
         }
         .yellow_zone {
           grid-column: 2 / span 2;
-          background-color: yellow;
         }
         .blue_zone {
           grid-row: span 2;
-          background-color: blue;
         }
         .red_zone {
           grid-column: span 2;
-          background-color: red;
         }
         .arrival_zone {
           width: 60px;
