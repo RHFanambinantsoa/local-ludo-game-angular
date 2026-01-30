@@ -54,4 +54,20 @@ export class GameBoardComponent {
     if (this.turn < 3) this.turn++;
     else this.turn = 0;
   }
+
+  onDiceClicked(event: boolean) {
+    if (!event) return;
+    this.diceValue = this.rollDice();
+    //eto ny logique an'ilay mandeha
+    console.log('manaonao zavatra kely eto');
+    setTimeout(() => {
+      if (this.diceValue != 6) {
+        this.nextPlayer();
+      }
+    }, 2000);
+  }
+
+  rollDice() {
+    return Math.floor(Math.random() * 6) + 1;
+  }
 }

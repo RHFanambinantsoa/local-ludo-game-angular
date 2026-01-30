@@ -8,6 +8,14 @@
     flex-direction: column;
     justify-content: space-between;
     .reaction_container {
+      > img {
+        width: 25px;
+        height: 25px;
+      }
+    }
+    .arrow {
+      font-size: 30px;
+      animation: moveArrow 1s infinite ease-in-out;
     }
   }
   .image_container {
@@ -31,12 +39,31 @@
   }
 }
 
-@keyframes test {
-  from {
-    display: block;
+@keyframes bounce2 {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translate(0);
   }
-  to {
-    display: none;
+  40% {
+    transform: translateX(-5px);
+  }
+  60% {
+    transform: translateX(-3px);
+  }
+}
+
+@keyframes moveArrow {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  100% {
+    transform: translateX(0);
   }
 }
 

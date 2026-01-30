@@ -24,8 +24,12 @@
       <app-dice
         [leftSide]="true"
         [diceValue]="isTurn(0) ? diceValue : 0"
+        (diceClicked)="onDiceClicked($event)"
       ></app-dice>
-      <app-dice [diceValue]="isTurn(1) ? diceValue : 0"></app-dice>
+      <app-dice
+        [diceValue]="isTurn(1) ? diceValue : 0"
+        (diceClicked)="onDiceClicked($event)"
+      ></app-dice>
     </div>
     <div class="backdrop">
       <!-- <PawnComponent
@@ -86,8 +90,12 @@
       <app-dice
         [leftSide]="true"
         [diceValue]="isTurn(3) ? diceValue : 0"
+        (diceClicked)="onDiceClicked($event)"
       ></app-dice>
-      <app-dice [diceValue]="isTurn(2) ? diceValue : 0"></app-dice>
+      <app-dice
+        [diceValue]="isTurn(2) ? diceValue : 0"
+        (diceClicked)="onDiceClicked($event)"
+      ></app-dice>
     </div>
   </div>
 </div>

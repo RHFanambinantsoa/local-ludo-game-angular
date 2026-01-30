@@ -1,4 +1,11 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { COMMON_CASE_NUMBER, COURSES } from '../../constants/gameConst';
 import { ICaseStyling } from '../../interfaces/ICaseStyling';
 import { PLAYER_COLOR } from '../../enums/PlayerColor.enum';
@@ -7,28 +14,24 @@ import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-dice',
-  imports: [NgIf, NgClass],
+  imports: [NgIf, NgClass, MatIcon],
   templateUrl: './dice.component.html',
   styleUrl: './dice.component.scss',
 })
 export class DiceComponent {
   @Input() leftSide: boolean = false;
-  @Input() diceValue: number = 1;
-  @Input() clickable: boolean = false;
+  @Input() diceValue: number = 0;
 
+  @Output() diceClicked = new EventEmitter<boolean>();
   diceRolled: boolean = false;
+
   ngOnInit() {}
 
   rollDice() {
     this.diceRolled = true;
-    this.diceValue = this.testLancerDe();
     setTimeout(() => {
       this.diceRolled = false;
-    }, 500);
-    console.log(this.diceValue);
-  }
-
-  testLancerDe() {
-    return Math.floor(Math.random() * 6) + 1;
+    }, 300);
+    this.diceClicked.emit(true);
   }
 }

@@ -1,14 +1,22 @@
 <div class="dice_section" [ngClass]="{ left: leftSide }">
   <div class="animation_container">
-    <div *ngIf="diceValue == 6" class="reaction_container">react</div>
-    <div *ngIf="diceValue" class="reaction_container">
-      <p>{{ leftSide ? "right arrow" : "left arrow" }}</p>
+    <div *ngIf="diceValue == 6" class="reaction_container">
+      <img src="images/LMAO.gif" alt="emoji" />
+    </div>
+    <div *ngIf="diceValue" class="arrow">
+      <mat-icon>
+        {{
+          leftSide
+            ? "keyboard_double_arrow_left"
+            : "keyboard_double_arrow_right"
+        }}
+      </mat-icon>
     </div>
   </div>
   <button class="image_container" [disabled]="!diceValue" (click)="rollDice()">
-    <ng-container *ngIf="diceValue">
+    <ng-container>
       <img
-        src="../../assets/dice-roll.gif"
+        src="images/dice-roll.gif"
         alt=""
         *ngIf="diceRolled"
         [ngClass]="{ animate: diceRolled }"
