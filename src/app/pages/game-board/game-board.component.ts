@@ -23,6 +23,8 @@ import { AnimatedTextComponent } from '../../components/animated-text-component/
 import { PlayerZoneComponent } from '../../components/player-zone-component/player-zone.component';
 import { PLAYER_COLOR } from '../../enums/PlayerColor.enum';
 import { DiceComponent } from '../../components/dice-component/dice.component';
+import { PawnComponent } from '../../components/pawn-component/pawn.component';
+import { IPawn } from '../../interfaces/IPawn';
 
 @Component({
   selector: 'app-game-board',
@@ -32,18 +34,29 @@ import { DiceComponent } from '../../components/dice-component/dice.component';
     MatButtonModule,
     PlayerZoneComponent,
     DiceComponent,
+    PawnComponent,
   ],
   templateUrl: './game-board.component.html',
   styleUrl: './game-board.component.scss',
 })
 export class GameBoardComponent {
   PLAYER_COLOR = PLAYER_COLOR;
-  celebrate: boolean = true;
+  celebrate: boolean = false;
 
   diceValue = 1;
   turn: number = 0;
 
-  ngOnInit() {}
+  pawn: IPawn = {};
+
+  ngOnInit() {
+    this.pawn = {
+      id: 'test',
+      idPlayer: 0,
+      color: PLAYER_COLOR.GREEN,
+      isMoveable: false,
+      isMoving: false,
+    };
+  }
 
   isTurn(position: number) {
     if (this.turn != position) return false;
@@ -69,5 +82,19 @@ export class GameBoardComponent {
 
   rollDice() {
     return Math.floor(Math.random() * 6) + 1;
+  }
+
+  testTurnToMoveable() {
+    this.pawn.isMoving = false;
+    this.pawn.isMoveable = true;
+  }
+
+  move() {
+    this.pawn.isMoveable = false;
+    this.pawn.isMoving = true;
+  }
+
+  onPawnClick(pawn: IPawn) {
+    console.log('test', pawn);
   }
 }

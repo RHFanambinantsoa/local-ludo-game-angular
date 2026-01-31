@@ -1,6 +1,8 @@
 <div class="game_container">
   <p>Gameboard</p>
   <button (click)="nextPlayer()">next player</button>
+  <button (click)="testTurnToMoveable()">moveable</button>
+  <button (click)="move()">is moving</button>
   <!-- <div style="height: 200px">
       <p>
         id: {{ userStore.user.id }} <br />
@@ -32,19 +34,14 @@
       ></app-dice>
     </div>
     <div class="backdrop">
-      <!-- <PawnComponent
-      :pawnMoveable="pawnMoveable"
-      :color="PLAYER_COLOR.BLUE"
-      :pawnId="'BLUEpiece1'"
-      :pawnInMove="pawnInMove"
-      /> -->
-      <!-- <img
-        src="assets/celebrate.gif"
-        alt=""
+      <app-pawn [pawn]="pawn" (pawnClicked)="onPawnClick($event)" />
+      <img
+        src="images/celebrate.gif"
+        alt="pinguin in a firework"
         *ngIf="celebrate"
-        :key="gifKey"
+        key="gifKey"
         class="celebrate"
-      /> -->
+      />
       <div class="game_board_container">
         <div class="green_zone">
           <app-player-zone
