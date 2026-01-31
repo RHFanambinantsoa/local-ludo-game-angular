@@ -3,6 +3,8 @@
   <button (click)="nextPlayer()">next player</button>
   <button (click)="testTurnToMoveable()">moveable</button>
   <button (click)="move()">is moving</button>
+  <button (click)="setStartCase(pawn)">piece out</button>
+  <button (click)="onGoBackHome(pawn)">go back home</button>
   <!-- <div style="height: 200px">
       <p>
         id: {{ userStore.user.id }} <br />
@@ -15,7 +17,7 @@
         <span v-if="pawnMoveable"> stop moveable </span>
       </v-btn>
 
-      <v-btn @click="setStartCase(27)">piece out</v-btn>
+      
       <v-btn @click="moveOneCase()">move one case</v-btn>
       <v-btn @click="onGoBackHome()">Go back home</v-btn>
       <v-btn @click="onMovePawn()">Move from 20 to PERSONAL 5 </v-btn>
