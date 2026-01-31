@@ -20,6 +20,7 @@ import {
 } from '@angular/material/dialog';
 import { ChoosePlayersModalComponent } from '../../components/choose-players-modal/choose-players-modal.component';
 import { AnimatedTextComponent } from '../../components/animated-text-component/animated-text.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -38,17 +39,25 @@ export class HomeComponent {
   readonly dialog = inject(MatDialog);
   readonly players = signal('');
 
+  constructor(private router: Router) {}
+
   ngOnInit() {}
 
   openDialog(): void {
     const dialogRef = this.dialog.open(ChoosePlayersModalComponent, {
+      autoFocus: true,
+      restoreFocus: true,
       data: { players: this.players },
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result !== undefined) {
+        console.log(result);
+
         this.players.set(result);
-                
-        console.log('mihidy', this.players());
+        //naviguer vers gameboard en ajoutant le parametre nbplayers
+        this.router.navigate(['/gameboard'], {
+          queryParams: { players: this.players() },
+        });
       }
     });
   }

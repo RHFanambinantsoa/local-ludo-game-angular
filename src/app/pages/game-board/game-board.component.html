@@ -1,10 +1,12 @@
 <div class="game_container">
   <p>Gameboard</p>
-  <button (click)="nextPlayer()">next player</button>
+  <!-- <button (click)="nextPlayer()">next player</button>
   <button (click)="testTurnToMoveable()">moveable</button>
   <button (click)="move()">is moving</button>
   <button (click)="setStartCase(pawn)">piece out</button>
-  <button (click)="onGoBackHome(pawn)">go back home</button>
+  <button (click)="onGoBackHome(pawn)">go back home</button> -->
+  <button (click)="placeAllPawns()">Commencer</button>
+
   <!-- <div style="height: 200px">
       <p>
         id: {{ userStore.user.id }} <br />
@@ -36,7 +38,12 @@
       ></app-dice>
     </div>
     <div class="backdrop">
-      <app-pawn [pawn]="pawn" (pawnClicked)="onPawnClick($event)" />
+      <app-pawn
+        *ngFor="let pawn of pawns"
+        [pawn]="pawn"
+        (pawnClicked)="onPawnClick($event)"
+      />
+
       <img
         src="images/celebrate.gif"
         alt="pinguin in a firework"

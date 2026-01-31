@@ -1,23 +1,7 @@
-import {
-  Component,
-  ElementRef,
-  inject,
-  signal,
-  ViewChild,
-} from '@angular/core';
-import { AssetsUrls } from '../../constants/AssetsUrl';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import {
-  MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
-  MatDialogRef,
-  MatDialogTitle,
-} from '@angular/material/dialog';
 import { ChoosePlayersModalComponent } from '../../components/choose-players-modal/choose-players-modal.component';
 import { AnimatedTextComponent } from '../../components/animated-text-component/animated-text.component';
 import { PlayerZoneComponent } from '../../components/player-zone-component/player-zone.component';
@@ -26,7 +10,10 @@ import { DiceComponent } from '../../components/dice-component/dice.component';
 import { PawnComponent } from '../../components/pawn-component/pawn.component';
 import { IPawn } from '../../interfaces/IPawn';
 import { CASE_TYPE } from '../../enums/CaseType.enum';
-import { CdkObserveContent } from '@angular/cdk/observers';
+import { ActivatedRoute } from '@angular/router';
+import { IPlayer } from '../../interfaces/IPlayer';
+import { ICase } from '../../interfaces/ICase';
+import { COURSES } from '../../constants/gameConst';
 
 @Component({
   selector: 'app-game-board',
@@ -37,35 +24,74 @@ import { CdkObserveContent } from '@angular/cdk/observers';
     PlayerZoneComponent,
     DiceComponent,
     PawnComponent,
-    CdkObserveContent,
   ],
   templateUrl: './game-board.component.html',
   styleUrl: './game-board.component.scss',
 })
 export class GameBoardComponent {
   PLAYER_COLOR = PLAYER_COLOR;
+
   celebrate: boolean = false;
 
   diceValue = 1;
   turn: number = 0;
 
-  pawn: IPawn = {
-    id: '',
-    color: PLAYER_COLOR.BLUE,
-    startCase: { type: CASE_TYPE.COMMON, position: 27 },
-  };
+  nbPlayers: number = 0;
+  pawns: IPawn[] = [];
 
-  ngOnInit() {
-    this.pawn = {
-      id: 'BLUEpiece1',
-      idPlayer: 0,
-      color: PLAYER_COLOR.BLUE,
-      isMoveable: false,
-      isMoving: false,
-      currentCase: { type: CASE_TYPE.COMMON, position: 45 },
-      startCase: { type: CASE_TYPE.COMMON, position: 27 },
-      entryCase: { type: CASE_TYPE.COMMON, position: 25 },
-    };
+  constructor(private route: ActivatedRoute) {}
+
+  async ngOnInit() {
+    //recupérer le nombre de joueurs
+    this.route.queryParams.subscribe((params) => {
+      this.nbPlayers = Number(params['players']);
+    });
+    // créer un tableau de pions d'après le nombre de joueurs reçu
+    this.createAllPawns(this.nbPlayers);
+  }
+
+  ngAfterViewInit() {}
+
+  createAllPawns(nbPlayers: number) {
+    let players: IPlayer[] = [];
+    let colors: PLAYER_COLOR[] = [
+      PLAYER_COLOR.BLUE,
+      PLAYER_COLOR.RED,
+      PLAYER_COLOR.GREEN,
+      PLAYER_COLOR.YELLOW,
+    ];
+    let usedColors: PLAYER_COLOR[] = [];
+    if (nbPlayers === 2) {
+      usedColors = [colors[0], colors[2]];
+    } else if (nbPlayers === 3) {
+      usedColors = [colors[0], colors[1], colors[2]];
+    } else {
+      usedColors = colors;
+    }
+    for (let i = 0; i < nbPlayers; i++) {
+      players.push({ id: i, color: usedColors[i], pawns: [] });
+    }
+    players.forEach((player) => {
+      for (let i = 0; i < 4; i++) {
+        player.pawns.push({
+          id: `${player.color}piece${i}`,
+          idPlayer: player.id,
+          color: player.color,
+          startCase: this.findConstantCases('start', player.color),
+          entryCase: this.findConstantCases('entry', player.color),
+          hasArrived: false,
+          isSafe: true,
+        });
+      }
+      this.pawns.push(...player.pawns);
+    });
+  }
+
+  private findConstantCases(caseToFind: String, color: PLAYER_COLOR) {
+    let course = COURSES.filter((cours) => cours.color === color)[0];
+    let position =
+      caseToFind === 'start' ? course.startCommonCase : course.endCommonCase;
+    return { type: CASE_TYPE.COMMON, position: position };
   }
 
   isTurn(position: number) {
@@ -94,21 +120,22 @@ export class GameBoardComponent {
     return Math.floor(Math.random() * 6) + 1;
   }
 
-  testTurnToMoveable() {
-    this.pawn.isMoving = false;
-    this.pawn.isMoveable = true;
-  }
+  // testTurnToMoveable() {
+  //   this.pawn.isMoving = false;
+  //   this.pawn.isMoveable = true;
+  // }
 
-  move() {
-    this.pawn.isMoveable = false;
-    this.pawn.isMoving = true;
-  }
+  // move() {
+  //   this.pawn.isMoveable = false;
+  //   this.pawn.isMoving = true;
+  // }
 
   onPawnClick(pawn: IPawn) {
     console.log('test', pawn);
   }
 
   async onGoBackHome(pawn: IPawn) {
+    pawn.previewsCase = pawn.currentCase;
     await this.placePawn(
       pawn.id,
       pawn.color,
@@ -134,6 +161,7 @@ export class GameBoardComponent {
       }
       await this.placePawn(pawn.id, pawn.color, CASE_TYPE.COMMON, -1);
     }
+    pawn.currentCase = { type: CASE_TYPE.COMMON, position: -1 };
   }
 
   async placePawn(
@@ -142,8 +170,6 @@ export class GameBoardComponent {
     caseType: CASE_TYPE | undefined,
     position: number | undefined,
   ) {
-    console.log('ato', pawnId, pawnColor, caseType, position);
-
     let htmlPawnId = pawnId;
     let place = document.getElementById(pawnColor + 'home' + pawnId);
     if (position && position > 0) {
@@ -171,5 +197,16 @@ export class GameBoardComponent {
       pawn.startCase?.position,
     );
     pawn.currentCase = pawn.startCase;
+  }
+
+  async placeAllPawns() {
+    await this.pawns.forEach((pw) => {
+      this.placePawn(
+        pw.id,
+        pw.color,
+        CASE_TYPE.COMMON,
+        pw.currentCase?.position,
+      );
+    });
   }
 }
