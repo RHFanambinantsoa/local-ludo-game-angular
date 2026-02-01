@@ -55,7 +55,7 @@ export class GameBoardComponent {
       this.isResumable = true;
       this.game = JSON.parse(storedPawns);
       this.pawns = this.generatePawnsList(this.game.players);
-      this.playedColors = this.genereteColorList(this.game.players);
+      this.playedColors = this.generateColorList(this.game.players);
     } else {
       // créer un tableau de pions d'après le nombre de joueurs reçu
       //recupérer le nombre de joueurs
