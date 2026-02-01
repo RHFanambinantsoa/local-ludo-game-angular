@@ -13,6 +13,7 @@ import { CASE_TYPE } from '../../enums/CaseType.enum';
 import { ActivatedRoute } from '@angular/router';
 import { IPlayer } from '../../interfaces/IPlayer';
 import { ICase } from '../../interfaces/ICase';
+import { IGame } from '../../interfaces/IGame';
 import { COURSES } from '../../constants/gameConst';
 
 @Component({
@@ -39,31 +40,65 @@ export class GameBoardComponent {
   nbPlayers: number = 0;
   pawns: IPawn[] = [];
 
+  game!: IGame;
+
   isResumable: boolean = false;
 
   constructor(private route: ActivatedRoute) {}
 
   async ngOnInit() {
-    //recupérer le nombre de joueurs
-    this.route.queryParams.subscribe((params) => {
-      this.nbPlayers = Number(params['players']);
-    });
     //verifie si il n'y a pas de partie inachevée dans le localStorage
-    const storedPawns = localStorage.getItem('pawns');
+    const storedPawns = localStorage.getItem('game');
     if (storedPawns) {
       this.isResumable = true;
-      this.pawns = JSON.parse(storedPawns);
+      this.game = JSON.parse(storedPawns);
+      this.pawns = this.generatePawnsList(this.game.players);
     } else {
       // créer un tableau de pions d'après le nombre de joueurs reçu
-      this.pawns = this.generatePawnsList();
-      this.saveChanges(this.pawns);
+      //recupérer le nombre de joueurs
+      this.route.queryParams.subscribe((params) => {
+        this.nbPlayers = Number(params['players']);
+      });
+      this.game = {
+        id: `LudoGame${this.nbPlayers}Joueurs`,
+        players: this.generatePlayers(this.nbPlayers),
+        target: 4,
+        turn: 0,
+      };
+      this.pawns = this.generatePawnsList(this.game.players);
+      this.saveChanges(this.game);
     }
   }
 
   ngAfterViewInit() {}
 
-  generatePawnsList() {
+  generatePawnsList(players: IPlayer[]) {
     let pawnsList: IPawn[] = [];
+    players.forEach((player) => {
+      if (player.pawns.length == 0) {
+        for (let i = 0; i < 4; i++) {
+          player.pawns.push({
+            id: `${player.color}piece${i}`,
+            idPlayer: player.id,
+            color: player.color,
+            startCase: this.findConstantCases('start', player.color),
+            entryCase: this.findConstantCases('entry', player.color),
+            currentCase: { type: CASE_TYPE.COMMON, position: -1 },
+            hasArrived: false,
+            isSafe: true,
+            isMoveable: false,
+            isMoving: false,
+          });
+        }
+        pawnsList.push(...player.pawns);
+      } else {
+        pawnsList.push(...player.pawns);
+      }
+    });
+    return pawnsList;
+  }
+
+  generatePlayers(nbPlayers: number) {
     let players: IPlayer[] = [];
     let colors: PLAYER_COLOR[] = [
       PLAYER_COLOR.BLUE,
@@ -72,38 +107,21 @@ export class GameBoardComponent {
       PLAYER_COLOR.YELLOW,
     ];
     let usedColors: PLAYER_COLOR[] = [];
-    if (this.nbPlayers === 2) {
+    if (nbPlayers === 2) {
       usedColors = [colors[0], colors[2]];
-    } else if (this.nbPlayers === 3) {
+    } else if (nbPlayers === 3) {
       usedColors = [colors[0], colors[1], colors[2]];
     } else {
       usedColors = colors;
     }
-    for (let i = 0; i < this.nbPlayers; i++) {
+    for (let i = 0; i < nbPlayers; i++) {
       players.push({ id: i, color: usedColors[i], pawns: [] });
     }
-    players.forEach((player) => {
-      for (let i = 0; i < 4; i++) {
-        player.pawns.push({
-          id: `${player.color}piece${i}`,
-          idPlayer: player.id,
-          color: player.color,
-          startCase: this.findConstantCases('start', player.color),
-          entryCase: this.findConstantCases('entry', player.color),
-          currentCase: { type: CASE_TYPE.COMMON, position: -1 },
-          hasArrived: false,
-          isSafe: true,
-          isMoveable: false,
-          isMoving: false,
-        });
-      }
-      pawnsList.push(...player.pawns);
-    });
-    return pawnsList;
+    return players;
   }
 
-  saveChanges(pawns: IPawn[]) {
-    localStorage.setItem('pawns', JSON.stringify(pawns));
+  saveChanges(game: IGame) {
+    localStorage.setItem('game', JSON.stringify(game));
   }
 
   private findConstantCases(caseToFind: String, color: PLAYER_COLOR) {
