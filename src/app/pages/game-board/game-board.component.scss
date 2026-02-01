@@ -4,6 +4,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  .button_container {
+    height: 100px;
+  }
   .board_section {
     display: flex;
     flex-direction: column;

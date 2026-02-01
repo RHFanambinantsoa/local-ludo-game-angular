@@ -43,6 +43,7 @@ export class GameBoardComponent {
   game!: IGame;
 
   isResumable: boolean = false;
+  pawnsPlaced: boolean = false;
 
   constructor(private route: ActivatedRoute) {}
 
@@ -245,5 +246,6 @@ export class GameBoardComponent {
         pw.currentCase?.position,
       );
     });
+    this.pawnsPlaced = true;
   }
 }
