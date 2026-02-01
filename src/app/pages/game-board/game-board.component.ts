@@ -85,6 +85,11 @@ export class GameBoardComponent {
       }
       this.pawns.push(...player.pawns);
     });
+    this.saveChanges(this.pawns);
+  }
+
+  saveChanges(pawns: IPawn[]) {
+    localStorage.setItem('pawns', JSON.stringify(pawns));
   }
 
   private findConstantCases(caseToFind: String, color: PLAYER_COLOR) {
