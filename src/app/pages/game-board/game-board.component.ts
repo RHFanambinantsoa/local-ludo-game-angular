@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -39,6 +39,8 @@ export class GameBoardComponent {
   nbPlayers: number = 0;
   pawns: IPawn[] = [];
 
+  isResumable: boolean = false;
+
   constructor(private route: ActivatedRoute) {}
 
   async ngOnInit() {
@@ -46,13 +48,22 @@ export class GameBoardComponent {
     this.route.queryParams.subscribe((params) => {
       this.nbPlayers = Number(params['players']);
     });
-    // créer un tableau de pions d'après le nombre de joueurs reçu
-    this.createAllPawns(this.nbPlayers);
+    //verifie si il n'y a pas de partie inachevée dans le localStorage
+    const storedPawns = localStorage.getItem('pawns');
+    if (storedPawns) {
+      this.isResumable = true;
+      this.pawns = JSON.parse(storedPawns);
+    } else {
+      // créer un tableau de pions d'après le nombre de joueurs reçu
+      this.pawns = this.generatePawnsList();
+      this.saveChanges(this.pawns);
+    }
   }
 
   ngAfterViewInit() {}
 
-  createAllPawns(nbPlayers: number) {
+  generatePawnsList() {
+    let pawnsList: IPawn[] = [];
     let players: IPlayer[] = [];
     let colors: PLAYER_COLOR[] = [
       PLAYER_COLOR.BLUE,
@@ -61,14 +72,14 @@ export class GameBoardComponent {
       PLAYER_COLOR.YELLOW,
     ];
     let usedColors: PLAYER_COLOR[] = [];
-    if (nbPlayers === 2) {
+    if (this.nbPlayers === 2) {
       usedColors = [colors[0], colors[2]];
-    } else if (nbPlayers === 3) {
+    } else if (this.nbPlayers === 3) {
       usedColors = [colors[0], colors[1], colors[2]];
     } else {
       usedColors = colors;
     }
-    for (let i = 0; i < nbPlayers; i++) {
+    for (let i = 0; i < this.nbPlayers; i++) {
       players.push({ id: i, color: usedColors[i], pawns: [] });
     }
     players.forEach((player) => {
@@ -79,13 +90,16 @@ export class GameBoardComponent {
           color: player.color,
           startCase: this.findConstantCases('start', player.color),
           entryCase: this.findConstantCases('entry', player.color),
+          currentCase: { type: CASE_TYPE.COMMON, position: -1 },
           hasArrived: false,
           isSafe: true,
+          isMoveable: false,
+          isMoving: false,
         });
       }
-      this.pawns.push(...player.pawns);
+      pawnsList.push(...player.pawns);
     });
-    this.saveChanges(this.pawns);
+    return pawnsList;
   }
 
   saveChanges(pawns: IPawn[]) {
@@ -204,12 +218,12 @@ export class GameBoardComponent {
     pawn.currentCase = pawn.startCase;
   }
 
-  async placeAllPawns() {
-    await this.pawns.forEach((pw) => {
+  async placeAllPawns(pawns: IPawn[]) {
+    await pawns.forEach((pw) => {
       this.placePawn(
         pw.id,
         pw.color,
-        CASE_TYPE.COMMON,
+        pw.currentCase?.type,
         pw.currentCase?.position,
       );
     });

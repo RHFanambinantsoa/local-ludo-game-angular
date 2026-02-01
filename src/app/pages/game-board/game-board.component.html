@@ -5,7 +5,9 @@
   <button (click)="move()">is moving</button>
   <button (click)="setStartCase(pawn)">piece out</button>
   <button (click)="onGoBackHome(pawn)">go back home</button> -->
-  <button (click)="placeAllPawns()">Commencer</button>
+  <button (click)="placeAllPawns(pawns)">
+    {{ isResumable ? "Reprendre la partie" : "Commencer" }}
+  </button>
 
   <!-- <div style="height: 200px">
       <p>
