@@ -39,6 +39,7 @@ export class GameBoardComponent {
 
   nbPlayers: number = 0;
   pawns: IPawn[] = [];
+  playedColors: PLAYER_COLOR[] = [];
 
   game!: IGame;
 
@@ -54,6 +55,7 @@ export class GameBoardComponent {
       this.isResumable = true;
       this.game = JSON.parse(storedPawns);
       this.pawns = this.generatePawnsList(this.game.players);
+      this.playedColors = this.genereteColorList(this.game.players);
     } else {
       // créer un tableau de pions d'après le nombre de joueurs reçu
       //recupérer le nombre de joueurs
@@ -67,11 +69,20 @@ export class GameBoardComponent {
         turn: 0,
       };
       this.pawns = this.generatePawnsList(this.game.players);
+      this.playedColors = this.generateColorList(this.game.players);
       this.saveChanges(this.game);
     }
   }
 
   ngAfterViewInit() {}
+
+  generateColorList(players: IPlayer[]) {
+    let colorList: PLAYER_COLOR[] = [];
+    players.forEach((player) => {
+      colorList.push(player.color);
+    });
+    return colorList;
+  }
 
   generatePawnsList(players: IPlayer[]) {
     let pawnsList: IPawn[] = [];
@@ -247,5 +258,9 @@ export class GameBoardComponent {
       );
     });
     this.pawnsPlaced = true;
+  }
+
+  isPlayedColor(color: PLAYER_COLOR) {
+    return this.playedColors.filter((c) => c == color)[0] ? true : false;
   }
 }

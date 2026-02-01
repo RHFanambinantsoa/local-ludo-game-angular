@@ -31,15 +31,21 @@
     </div> -->
   <div class="board_section">
     <div class="dice_section">
-      <app-dice
-        [leftSide]="true"
-        [diceValue]="isTurn(0) ? diceValue : 0"
-        (diceClicked)="onDiceClicked($event)"
-      ></app-dice>
-      <app-dice
-        [diceValue]="isTurn(1) ? diceValue : 0"
-        (diceClicked)="onDiceClicked($event)"
-      ></app-dice>
+      <div>
+        <app-dice
+          *ngIf="isPlayedColor(PLAYER_COLOR.GREEN)"
+          [leftSide]="true"
+          [diceValue]="isTurn(0) ? diceValue : 0"
+          (diceClicked)="onDiceClicked($event)"
+        ></app-dice>
+      </div>
+      <div>
+        <app-dice
+          *ngIf="isPlayedColor(PLAYER_COLOR.YELLOW)"
+          [diceValue]="isTurn(1) ? diceValue : 0"
+          (diceClicked)="onDiceClicked($event)"
+        ></app-dice>
+      </div>
     </div>
     <div class="backdrop">
       <app-pawn
@@ -97,15 +103,21 @@
       </div>
     </div>
     <div class="dice_section">
-      <app-dice
-        [leftSide]="true"
-        [diceValue]="isTurn(3) ? diceValue : 0"
-        (diceClicked)="onDiceClicked($event)"
-      ></app-dice>
-      <app-dice
-        [diceValue]="isTurn(2) ? diceValue : 0"
-        (diceClicked)="onDiceClicked($event)"
-      ></app-dice>
+      <div>
+        <app-dice
+          *ngIf="isPlayedColor(PLAYER_COLOR.RED)"
+          [leftSide]="true"
+          [diceValue]="isTurn(3) ? diceValue : 0"
+          (diceClicked)="onDiceClicked($event)"
+        ></app-dice>
+      </div>
+      <div>
+        <app-dice
+          *ngIf="isPlayedColor(PLAYER_COLOR.BLUE)"
+          [diceValue]="isTurn(2) ? diceValue : 0"
+          (diceClicked)="onDiceClicked($event)"
+        ></app-dice>
+      </div>
     </div>
   </div>
 </div>
