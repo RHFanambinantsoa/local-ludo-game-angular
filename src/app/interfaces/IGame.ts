@@ -1,8 +1,9 @@
-import type { IPlayer } from "./IPlayer";
+import { PLAYER_COLOR } from '../enums/PlayerColor.enum';
+import type { IPlayer } from './IPlayer';
 
 export interface IGame {
   id: string;
   players: IPlayer[];
-  turn: number;
+  turn: PLAYER_COLOR;
   target: number;
 }

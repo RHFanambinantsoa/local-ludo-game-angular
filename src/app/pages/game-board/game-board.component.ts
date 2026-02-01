@@ -35,7 +35,7 @@ export class GameBoardComponent {
   celebrate: boolean = false;
 
   diceValue = 1;
-  turn: number = 0;
+  turn!: PLAYER_COLOR;
 
   nbPlayers: number = 0;
   pawns: IPawn[] = [];
@@ -56,6 +56,7 @@ export class GameBoardComponent {
       this.game = JSON.parse(storedPawns);
       this.pawns = this.generatePawnsList(this.game.players);
       this.playedColors = this.generateColorList(this.game.players);
+      this.turn = this.game.turn;
     } else {
       // créer un tableau de pions d'après le nombre de joueurs reçu
       //recupérer le nombre de joueurs
@@ -66,10 +67,11 @@ export class GameBoardComponent {
         id: `LudoGame${this.nbPlayers}Joueurs`,
         players: this.generatePlayers(this.nbPlayers),
         target: 4,
-        turn: 0,
+        turn: PLAYER_COLOR.GREEN,
       };
       this.pawns = this.generatePawnsList(this.game.players);
       this.playedColors = this.generateColorList(this.game.players);
+      this.turn = this.game.turn;
       this.saveChanges(this.game);
     }
   }
@@ -143,14 +145,22 @@ export class GameBoardComponent {
     return { type: CASE_TYPE.COMMON, position: position };
   }
 
-  isTurn(position: number) {
-    if (this.turn != position) return false;
-    return true;
+  isTurn(color: PLAYER_COLOR) {
+    return this.turn != color ? false : true;
   }
 
   nextPlayer() {
-    if (this.turn < 3) this.turn++;
-    else this.turn = 0;
+    const currentTurn = this.turn;
+    const currentTurnIndex = this.playedColors.findIndex(
+      (p) => p == currentTurn,
+    );
+    if (currentTurnIndex < this.playedColors.length - 1) {
+      this.turn = this.playedColors[currentTurnIndex + 1];
+    } else {
+      this.turn = this.playedColors[0];
+    }
+    this.game.turn = this.turn;
+    this.saveChanges(this.game);
   }
 
   onDiceClicked(event: boolean) {
