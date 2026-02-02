@@ -102,9 +102,6 @@ export class GameBoardComponent {
           pw.hasArrived == false,
       );
     }
-    console.log('moveable', pawnsMoveable);
-    console.log('not moveable', notMoveable);
-
     if (pawnsMoveable.length > 0) {
       pawnsMoveable.forEach((p) => {
         p.isMoveable = true;
@@ -114,8 +111,11 @@ export class GameBoardComponent {
           p.isMoveable = false;
         });
       }
-      if (notMoveable.length > pawnsMoveable.length) {
-        console.log('betsaka hono');
+      if (notMoveable.length == 4) {
+        //tsisy afaka ahetsika intsony ny pion anaky 4 izany
+        setTimeout(() => {
+          this.nextPlayer();
+        }, 1000);
       }
     } else {
       setTimeout(() => {
@@ -404,7 +404,7 @@ export class GameBoardComponent {
   }
 
   private rollDice() {
-    // return Math.floor(Math.random() * 6) + 1;
-    return 6;
+    return Math.floor(Math.random() * 6) + 1;
+    // return 6;
   }
 }
