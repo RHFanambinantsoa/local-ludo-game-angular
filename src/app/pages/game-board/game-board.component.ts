@@ -37,6 +37,7 @@ export class GameBoardComponent {
   diceValue: number = 1;
   diceClickable: boolean = true;
   turn!: PLAYER_COLOR;
+  turnReapet: { turn?: PLAYER_COLOR; reapet?: number } = {};
 
   nbPlayers: number = 0;
   pawns: IPawn[] = [];
@@ -75,7 +76,14 @@ export class GameBoardComponent {
   ngAfterViewInit() {}
 
   onDiceClicked(event: boolean, playerColor: PLAYER_COLOR) {
+    console.log('turn', this.turn);
+    console.log('turnreapet', this.turnReapet);
     if (!event) return;
+    if (this.turnReapet && this.turnReapet.turn != this.turn) {
+      this.turnReapet = {};
+    }
+    console.log('turnreapet2', this.turnReapet);
+
     this.diceClickable = false;
     this.diceValue = this.rollDice();
     let pawnsMoveable: IPawn[] = [];
@@ -85,8 +93,6 @@ export class GameBoardComponent {
         p.currentCase?.type == CASE_TYPE.PERSONAL &&
         6 - p.nbPersonalCaseParcouru < this.diceValue,
     );
-    console.log('not', notMoveable);
-
     if (this.diceValue == 6) {
       pawnsMoveable = this.pawns.filter(
         (p) => p.color == playerColor && p.hasArrived == false,
@@ -100,40 +106,24 @@ export class GameBoardComponent {
           pw.hasArrived == false,
       );
     }
+    console.log('moveable', pawnsMoveable);
+    console.log('not moveable', notMoveable);
 
     if (pawnsMoveable.length > 0) {
       pawnsMoveable.forEach((p) => {
         p.isMoveable = true;
-        // if (p.id == 'BLUEpiece0') {
-        //   p.currentCase = { type: CASE_TYPE.COMMON, position: 29 };
-        //   this.placePawn(
-        //     p.id,
-        //     p.color,
-        //     p.currentCase.type,
-        //     p.currentCase.position,
-        //   );
-        // }
       });
       if (notMoveable.length > 0) {
         notMoveable.forEach((p) => {
           p.isMoveable = false;
-          // if (p.id == 'BLUEpiece0') {
-          //   p.currentCase = { type: CASE_TYPE.COMMON, position: 29 };
-          //   this.placePawn(
-          //     p.id,
-          //     p.color,
-          //     p.currentCase.type,
-          //     p.currentCase.position,
-          //   );
-          // }
         });
       }
+      console.log(pawnsMoveable);
     } else {
       setTimeout(() => {
         this.nextPlayer();
       }, 1000);
     }
-    //mbola afaka mandeha izany hoe tsy tonga d next tours
   }
 
   onPawnClick(pawn: IPawn) {
@@ -142,12 +132,31 @@ export class GameBoardComponent {
     } else {
       this.updatePawn(pawn, this.diceValue);
     }
-    this.nextPlayer();
-    // setTimeout(() => {
-    //   this.nextPlayer();
-    //   if (this.diceValue != 6) {
-    //   }
-    // }, 2000);
+    if (this.diceValue == 6) {
+      this.onMoreTurn();
+    } else {
+      this.nextPlayer();
+    }
+  }
+
+  private onMoreTurn() {
+    if (
+      this.turnReapet &&
+      this.turnReapet.reapet &&
+      this.turnReapet.reapet == 2
+    ) {
+      this.nextPlayer();
+      return;
+    }
+    this.turnReapet = {
+      turn: this.turn,
+      reapet:
+        this.turnReapet && this.turnReapet.reapet
+          ? this.turnReapet.reapet + 1
+          : 1,
+    };
+    this.diceClickable = true;
+    this.saveChanges(this.game);
   }
 
   updatePawn(pawn: IPawn, diceValue: number) {
@@ -166,7 +175,6 @@ export class GameBoardComponent {
         pawn.nbCommunCaseParcouru = positionFrom0;
       }
     }
-    console.log('tsy personel', pawn);
     if (!pawn.nbPersonalCaseParcouru) {
       pawn.previewsCase = pawn.currentCase;
       const casePosition = pawn.nbCommunCaseParcouru + pawn.startCase.position;
@@ -189,7 +197,6 @@ export class GameBoardComponent {
       pawn.currentCase?.type,
       pawn.currentCase?.position,
     );
-    console.log('caseto', pawn);
   }
 
   async placeAllPawns(pawns: IPawn[]) {
@@ -398,7 +405,7 @@ export class GameBoardComponent {
   }
 
   private rollDice() {
-    return Math.floor(Math.random() * 6) + 1;
-    // return 3;
+    // return Math.floor(Math.random() * 6) + 1;
+    return 6;
   }
 }
