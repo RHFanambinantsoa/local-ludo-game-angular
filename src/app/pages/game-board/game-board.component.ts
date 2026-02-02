@@ -170,22 +170,12 @@ export class GameBoardComponent {
       if (pawn.nbPersonalCaseParcouru == 6) pawn.hasArrived = true;
     }
 
-    this.placePawn(
-      pawn.id,
-      pawn.color,
-      pawn.currentCase?.type,
-      pawn.currentCase?.position,
-    );
+    this.placePawn(pawn, pawn.currentCase?.type, pawn.currentCase?.position);
   }
 
   async placeAllPawns(pawns: IPawn[]) {
     await pawns.forEach((pw) => {
-      this.placePawn(
-        pw.id,
-        pw.color,
-        pw.currentCase?.type,
-        pw.currentCase?.position,
-      );
+      this.placePawn(pw, pw.currentCase?.type, pw.currentCase?.position);
     });
     this.pawnsPlaced = true;
   }
@@ -212,34 +202,35 @@ export class GameBoardComponent {
 
   //place le pion dans le plateau de jeu, dans une case spécifique
   private async placePawn(
-    pawnId: string,
-    pawnColor: PLAYER_COLOR,
+    pawn: IPawn,
     caseType: CASE_TYPE | undefined,
     position: number | undefined,
   ) {
-    let htmlPawnId = pawnId;
+    let htmlPawnId = pawn.id;
     let htmlCaseId = '';
     if (position && position > 0) {
       htmlCaseId =
-        caseType == CASE_TYPE.COMMON ? 'C' + position : pawnColor + position;
+        caseType == CASE_TYPE.COMMON ? 'C' + position : pawn.color + position;
     } else {
-      htmlCaseId = pawnColor + 'home' + pawnId.slice(-1);
+      htmlCaseId = pawn.color + 'home' + pawn.id.slice(-1);
     }
     const casehtml = document.getElementById(htmlCaseId);
-    const pawn = document.getElementById(htmlPawnId);
-    if (pawn && casehtml) {
-      const rectPawn = pawn.getBoundingClientRect();
+    const pawnhtml = document.getElementById(htmlPawnId);
+    if (pawnhtml && casehtml) {
+      const rectPawn = pawnhtml.getBoundingClientRect();
       const rectCase = casehtml.getBoundingClientRect();
-      pawn.style.top = rectCase.top - rectPawn.height / 2 + 'px';
-      pawn.style.left = rectCase.left + 'px';
+      pawnhtml.style.top = rectCase.top - rectPawn.height / 2 + 'px';
+      pawnhtml.style.left = rectCase.left + 'px';
+      if (pawn.currentCase) {
+        pawn.currentCase.id = htmlCaseId;
+      }
     }
   }
 
   private async goBackHome(pawn: IPawn) {
     pawn.previewsCase = pawn.currentCase;
     await this.placePawn(
-      pawn.id,
-      pawn.color,
+      pawn,
       pawn.currentCase?.type,
       pawn.currentCase?.position,
     );
@@ -251,16 +242,11 @@ export class GameBoardComponent {
         if (current == 1) {
           current = 53;
         }
-        await this.placePawn(
-          pawn.id,
-          pawn.color,
-          CASE_TYPE.COMMON,
-          current - 1,
-        );
+        await this.placePawn(pawn, CASE_TYPE.COMMON, current - 1);
         await new Promise((resolve) => setTimeout(resolve, 50));
         current--;
       }
-      await this.placePawn(pawn.id, pawn.color, CASE_TYPE.COMMON, -1);
+      await this.placePawn(pawn, CASE_TYPE.COMMON, -1);
     }
     pawn.currentCase = { type: CASE_TYPE.COMMON, position: -1 };
   }
@@ -275,12 +261,7 @@ export class GameBoardComponent {
   }
 
   private async setStartCase(pawn: IPawn) {
-    await this.placePawn(
-      pawn.id,
-      pawn.color,
-      pawn.startCase?.type,
-      pawn.startCase?.position,
-    );
+    await this.placePawn(pawn, pawn.startCase?.type, pawn.startCase?.position);
     pawn.previewsCase = pawn.currentCase;
     pawn.currentCase = pawn.startCase;
     pawn.nbCommunCaseParcouru = 0;
