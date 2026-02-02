@@ -147,9 +147,10 @@ export class GameBoardComponent {
     console.log('tsy personel', pawn);
     if (!pawn.nbPersonalCaseParcouru) {
       pawn.previewsCase = pawn.currentCase;
+      const casePosition = pawn.nbCommunCaseParcouru + pawn.startCase.position;
       pawn.currentCase = {
         type: CASE_TYPE.COMMON,
-        position: (pawn.nbCommunCaseParcouru + pawn.startCase.position) % 52,
+        position: casePosition < 53 ? casePosition : casePosition % 52,
       };
     } else {
       pawn.previewsCase = pawn.currentCase;
