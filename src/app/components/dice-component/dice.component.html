@@ -1,6 +1,6 @@
 <div class="dice_section" [ngClass]="{ left: leftSide }">
   <div class="animation_container">
-    <div *ngIf="diceValue == 6" class="reaction_container">
+    <div *ngIf="diceOption.value == 6" class="reaction_container">
       <img src="images/LMAO.gif" alt="emoji" />
     </div>
     <div *ngIf="diceValue" class="arrow">
@@ -13,7 +13,11 @@
       </mat-icon>
     </div>
   </div>
-  <button class="image_container" [disabled]="!diceValue" (click)="rollDice()">
+  <button
+    class="image_container"
+    [disabled]="!diceOption.isClickable"
+    (click)="rollDice()"
+  >
     <ng-container>
       <img
         src="images/dice-roll.gif"
@@ -23,32 +27,32 @@
       />
 
       <ng-container *ngIf="!diceRolled">
-        <div *ngIf="diceValue == 1" class="face face-1">
+        <div *ngIf="diceOption.value == 1" class="face face-1">
           <div class="dot center"></div>
         </div>
-        <div *ngIf="diceValue == 2" class="face face-2">
+        <div *ngIf="diceOption.value == 2" class="face face-2">
           <div class="dot top-left"></div>
           <div class="dot bottom-right"></div>
         </div>
-        <div *ngIf="diceValue == 3" class="face face-3">
+        <div *ngIf="diceOption.value == 3" class="face face-3">
           <div class="dot top-left"></div>
           <div class="dot center"></div>
           <div class="dot bottom-right"></div>
         </div>
-        <div *ngIf="diceValue == 4" class="face face-4">
+        <div *ngIf="diceOption.value == 4" class="face face-4">
           <div class="dot top-left"></div>
           <div class="dot top-right"></div>
           <div class="dot bottom-left"></div>
           <div class="dot bottom-right"></div>
         </div>
-        <div *ngIf="diceValue == 5" class="face face-5">
+        <div *ngIf="diceOption.value == 5" class="face face-5">
           <div class="dot top-left"></div>
           <div class="dot top-right"></div>
           <div class="dot center"></div>
           <div class="dot bottom-left"></div>
           <div class="dot bottom-right"></div>
         </div>
-        <div *ngIf="diceValue == 6" class="face face-6">
+        <div *ngIf="diceOption.value == 6" class="face face-6">
           <div class="dot top-left"></div>
           <div class="dot top-right"></div>
           <div class="dot middle-left"></div>

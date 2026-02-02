@@ -32,7 +32,8 @@ export class GameBoardComponent {
   celebrate: boolean = false;
 
   game!: IGame;
-  diceValue = 1;
+  diceValue: number = 1;
+  diceClickable: boolean = true;
   turn!: PLAYER_COLOR;
 
   nbPlayers: number = 0;
@@ -74,6 +75,7 @@ export class GameBoardComponent {
   onDiceClicked(event: boolean, playerColor: PLAYER_COLOR) {
     if (!event) return;
     this.diceValue = this.rollDice();
+    this.diceClickable = false;
     let pawnsMoveable: IPawn[] = [];
     if (this.diceValue == 6) {
       pawnsMoveable = this.pawns.filter(
@@ -111,7 +113,7 @@ export class GameBoardComponent {
   }
 
   onPawnClick(pawn: IPawn) {
-    // this.setStartCase(pawn);
+    this.setStartCase(pawn);
     console.log('test', pawn);
   }
 
@@ -301,10 +303,12 @@ export class GameBoardComponent {
       this.turn = this.playedColors[0];
     }
     this.game.turn = this.turn;
+    this.diceClickable = true;
     this.saveChanges(this.game);
   }
 
   private rollDice() {
-    return Math.floor(Math.random() * 6) + 1;
+    // return Math.floor(Math.random() * 6) + 1;
+    return 6;
   }
 }
