@@ -166,6 +166,7 @@ export class GameBoardComponent {
         type: CASE_TYPE.PERSONAL,
         position: pawn.nbPersonalCaseParcouru,
       };
+
       if (pawn.nbPersonalCaseParcouru == 6) pawn.hasArrived = true;
     }
 
@@ -217,19 +218,18 @@ export class GameBoardComponent {
     position: number | undefined,
   ) {
     let htmlPawnId = pawnId;
-    let place = document.getElementById(pawnColor + 'home' + pawnId);
+    let htmlCaseId = '';
     if (position && position > 0) {
-      place =
-        caseType == CASE_TYPE.COMMON
-          ? document.getElementById('C' + position)
-          : document.getElementById(pawnColor + position);
+      htmlCaseId =
+        caseType == CASE_TYPE.COMMON ? 'C' + position : pawnColor + position;
     } else {
-      place = document.getElementById(pawnColor + 'home' + pawnId.slice(-1));
+      htmlCaseId = pawnColor + 'home' + pawnId.slice(-1);
     }
+    const casehtml = document.getElementById(htmlCaseId);
     const pawn = document.getElementById(htmlPawnId);
-    if (pawn && place) {
+    if (pawn && casehtml) {
       const rectPawn = pawn.getBoundingClientRect();
-      const rectCase = place.getBoundingClientRect();
+      const rectCase = casehtml.getBoundingClientRect();
       pawn.style.top = rectCase.top - rectPawn.height / 2 + 'px';
       pawn.style.left = rectCase.left + 'px';
     }
