@@ -1,35 +1,11 @@
 <div class="game_container">
   <div class="button_container">
     <p>Gameboard</p>
-    <!-- <button (click)="nextPlayer()">next player</button>
-    <button (click)="testTurnToMoveable()">moveable</button>
-    <button (click)="move()">is moving</button>
-    <button (click)="setStartCase(pawn)">piece out</button>
-    <button (click)="onGoBackHome(pawn)">go back home</button> -->
     <button *ngIf="!pawnsPlaced" (click)="placeAllPawns(pawns)">
       {{ isResumable ? "Reprendre la partie" : "Commencer" }}
     </button>
-    <button (click)="stopAllPawnMovement()">aza mihetsika</button>
   </div>
 
-  <!-- <div style="height: 200px">
-      <p>
-        id: {{ userStore.user.id }} <br />
-        pseudo: {{ userStore.user.username }} <br />
-        numero: {{ userStore.user.phoneNumber }}
-      </p>
-
-      <v-btn @click="setPawnMoveable()">
-        <span v-if="!pawnMoveable"> start moveable </span>
-        <span v-if="pawnMoveable"> stop moveable </span>
-      </v-btn>
-
-      
-      <v-btn @click="moveOneCase()">move one case</v-btn>
-      <v-btn @click="onGoBackHome()">Go back home</v-btn>
-      <v-btn @click="onMovePawn()">Move from 20 to PERSONAL 5 </v-btn>
-      <v-btn @click="onCelebrate()">Celebrate</v-btn>
-    </div> -->
   <div class="board_section">
     <div class="dice_section">
       <div>
