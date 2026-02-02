@@ -135,6 +135,7 @@ export class GameBoardComponent {
   }
 
   saveChanges(game: IGame) {
+    this.stopAllPawnMovement();
     localStorage.setItem('game', JSON.stringify(game));
   }
 
@@ -163,20 +164,71 @@ export class GameBoardComponent {
     this.saveChanges(this.game);
   }
 
-  onDiceClicked(event: boolean) {
+  onDiceClicked(event: boolean, playerColor: PLAYER_COLOR) {
     if (!event) return;
     this.diceValue = this.rollDice();
+    let pawnsMoveable: IPawn[] = [];
+    //jerene hoe aiza avy ny pion de couleur player color ny current color
+
+    //raha misy efa tafavoaka d atao moveable izay tafavoaka izany hoe position>0
+
+    //raha dicevalue==6 miampy an'le eo ambony d atao moveable koa ilay ao anaty home izany hoe na position -1 ary
+    if (this.diceValue == 6) {
+      pawnsMoveable = this.pawns.filter(
+        (p) => p.color == playerColor && p.hasArrived == false,
+      );
+    } else {
+      pawnsMoveable = this.pawns.filter(
+        (pw) =>
+          pw.color == playerColor &&
+          pw.currentCase?.position &&
+          pw.currentCase?.position > 0 &&
+          pw.hasArrived == false,
+      );
+    }
+    // if (pawnsMoveable) pawnsMoveable[0].isMoveable = true;
+    console.log(pawnsMoveable);
+    if (pawnsMoveable) {
+      pawnsMoveable.forEach((p) => {
+        p.isMoveable = true;
+        if (p.id == 'BLUEpiece0') {
+          p.currentCase = { type: CASE_TYPE.COMMON, position: 29 };
+          this.placePawn(
+            p.id,
+            p.color,
+            p.currentCase.type,
+            p.currentCase.position,
+          );
+        }
+        // this.updatePawn(p);
+        console.log(this.game);
+      });
+    }
+
+    //mbola afaka mandeha izany hoe tsy tonga d next tours
+    // avy manova ilay tableau testena raha mety hoe tonga d miova ve ilay izy raha moveable ovaina
+    console.log(this.diceValue, playerColor);
+
     //eto ny logique an'ilay mandeha
     console.log('manaonao zavatra kely eto');
     setTimeout(() => {
+      this.nextPlayer();
       if (this.diceValue != 6) {
-        this.nextPlayer();
       }
     }, 2000);
   }
 
   rollDice() {
     return Math.floor(Math.random() * 6) + 1;
+  }
+
+  stopAllPawnMovement() {
+    this.game.players.forEach((player) => {
+      player.pawns.forEach((pa) => {
+        pa.isMoveable = false;
+        pa.isMoving = false;
+      });
+    });
   }
 
   // testTurnToMoveable() {
@@ -191,6 +243,22 @@ export class GameBoardComponent {
 
   onPawnClick(pawn: IPawn) {
     console.log('test', pawn);
+  }
+
+  findPawnById(id: string) {
+    let pawns;
+  }
+
+  updatePawn(pawn: IPawn) {
+    this.game.players.forEach((player) => {
+      if (player.id == pawn.idPlayer) {
+        player.pawns.forEach((pa) => {
+          if (pa.id == pawn.id) {
+            pa = pawn;
+          }
+        });
+      }
+    });
   }
 
   async onGoBackHome(pawn: IPawn) {
