@@ -13,6 +13,7 @@ import { IPlayer } from '../../interfaces/IPlayer';
 import { IGame } from '../../interfaces/IGame';
 import { COURSES } from '../../constants/gameConst';
 import { IDice } from '../../interfaces/IDice';
+import { ICase } from '../../interfaces/ICase';
 
 @Component({
   selector: 'app-game-board',
@@ -64,11 +65,11 @@ export class GameBoardComponent {
         target: 4,
         turn: PLAYER_COLOR.GREEN,
       };
-      this.saveChanges(this.game);
     }
     this.pawns = this.generatePawnsList(this.game.players);
     this.playedColors = this.generateColorList(this.game.players);
     this.turn = this.game.turn;
+    this.saveChanges(this.game);
   }
 
   ngAfterViewInit() {}
@@ -78,6 +79,7 @@ export class GameBoardComponent {
     this.diceValue = this.rollDice();
     this.diceClickable = false;
     let pawnsMoveable: IPawn[] = [];
+
     if (this.diceValue == 6) {
       pawnsMoveable = this.pawns.filter(
         (p) => p.color == playerColor && p.hasArrived == false,
@@ -91,7 +93,7 @@ export class GameBoardComponent {
           pw.hasArrived == false,
       );
     }
-    if (pawnsMoveable) {
+    if (pawnsMoveable.length > 0) {
       pawnsMoveable.forEach((p) => {
         p.isMoveable = true;
         // if (p.id == 'BLUEpiece0') {
@@ -104,18 +106,54 @@ export class GameBoardComponent {
         //   );
         // }
       });
+    } else {
+      setTimeout(() => {
+        this.nextPlayer();
+      }, 1000);
     }
     //mbola afaka mandeha izany hoe tsy tonga d next tours
-    setTimeout(() => {
-      this.nextPlayer();
-      if (this.diceValue != 6) {
-      }
-    }, 2000);
   }
 
   onPawnClick(pawn: IPawn) {
-    this.setStartCase(pawn);
-    console.log('test', pawn);
+    if (pawn.currentCase?.position && pawn.currentCase?.position < 0) {
+      this.setStartCase(pawn);
+    } else {
+      this.findCurrentCase(pawn, this.diceValue);
+    }
+    this.nextPlayer();
+    // setTimeout(() => {
+    //   this.nextPlayer();
+    //   if (this.diceValue != 6) {
+    //   }
+    // }, 2000);
+  }
+
+  findCurrentCase(pawn: IPawn, diceValue: number) {
+    pawn.positionFrom0 = pawn.positionFrom0 + diceValue;
+
+    if (pawn.positionFrom0 < 53) {
+      pawn.previewsCase = pawn.currentCase;
+      pawn.currentCase = {
+        type: CASE_TYPE.COMMON,
+        position: (pawn.positionFrom0 + pawn.startCase.position) % 52,
+      };
+    } else if (pawn.positionFrom0 > 56) {
+      pawn.positionFrom0 = pawn.positionFrom0 - diceValue;
+    } else {
+      pawn.previewsCase = pawn.currentCase;
+      pawn.currentCase = {
+        type: CASE_TYPE.PERSONAL,
+        position: pawn.positionFrom0 % 50,
+      };
+    }
+
+    this.placePawn(
+      pawn.id,
+      pawn.color,
+      pawn.currentCase?.type,
+      pawn.currentCase?.position,
+    );
+    console.log('caseto', pawn);
   }
 
   async placeAllPawns(pawns: IPawn[]) {
@@ -222,7 +260,9 @@ export class GameBoardComponent {
       pawn.startCase?.type,
       pawn.startCase?.position,
     );
+    pawn.previewsCase = pawn.currentCase;
     pawn.currentCase = pawn.startCase;
+    pawn.positionFrom0 = 0;
   }
 
   /////////////////////////////////////////////////////////////////
@@ -266,6 +306,7 @@ export class GameBoardComponent {
             isSafe: true,
             isMoveable: false,
             isMoving: false,
+            positionFrom0: 0,
           });
         }
         pawnsList.push(...player.pawns);
@@ -319,7 +360,6 @@ export class GameBoardComponent {
   }
 
   private rollDice() {
-    // return Math.floor(Math.random() * 6) + 1;
-    return 6;
+    return Math.floor(Math.random() * 6) + 1;
   }
 }
