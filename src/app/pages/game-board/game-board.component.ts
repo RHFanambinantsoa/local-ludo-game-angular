@@ -118,7 +118,7 @@ export class GameBoardComponent {
     if (pawn.currentCase?.position && pawn.currentCase?.position < 0) {
       this.setStartCase(pawn);
     } else {
-      this.findCurrentCase(pawn, this.diceValue);
+      this.updatePawn(pawn, this.diceValue);
     }
     this.nextPlayer();
     // setTimeout(() => {
@@ -128,23 +128,36 @@ export class GameBoardComponent {
     // }, 2000);
   }
 
-  findCurrentCase(pawn: IPawn, diceValue: number) {
-    pawn.positionFrom0 = pawn.positionFrom0 + diceValue;
+  updatePawn(pawn: IPawn, diceValue: number) {
+    let positionFrom0 = pawn.nbPersonalCaseParcouru
+      ? pawn.nbPersonalCaseParcouru + diceValue
+      : pawn.nbCommunCaseParcouru + diceValue;
 
-    if (pawn.positionFrom0 < 53) {
+    if (positionFrom0 > 50) {
+      pawn.nbPersonalCaseParcouru = positionFrom0 % 50;
+      pawn.nbCommunCaseParcouru = 50;
+    } else {
+      if (pawn.nbPersonalCaseParcouru) {
+        pawn.nbPersonalCaseParcouru =
+          positionFrom0 < 7 ? positionFrom0 : pawn.nbPersonalCaseParcouru;
+      } else {
+        pawn.nbCommunCaseParcouru = positionFrom0;
+      }
+    }
+    console.log('tsy personel', pawn);
+    if (!pawn.nbPersonalCaseParcouru) {
       pawn.previewsCase = pawn.currentCase;
       pawn.currentCase = {
         type: CASE_TYPE.COMMON,
-        position: (pawn.positionFrom0 + pawn.startCase.position) % 52,
+        position: (pawn.nbCommunCaseParcouru + pawn.startCase.position) % 52,
       };
-    } else if (pawn.positionFrom0 > 56) {
-      pawn.positionFrom0 = pawn.positionFrom0 - diceValue;
     } else {
       pawn.previewsCase = pawn.currentCase;
       pawn.currentCase = {
         type: CASE_TYPE.PERSONAL,
-        position: pawn.positionFrom0 % 50,
+        position: pawn.nbPersonalCaseParcouru,
       };
+      if (pawn.nbPersonalCaseParcouru == 6) pawn.hasArrived = true;
     }
 
     this.placePawn(
@@ -262,7 +275,8 @@ export class GameBoardComponent {
     );
     pawn.previewsCase = pawn.currentCase;
     pawn.currentCase = pawn.startCase;
-    pawn.positionFrom0 = 0;
+    pawn.nbCommunCaseParcouru = 0;
+    pawn.nbPersonalCaseParcouru = 0;
   }
 
   /////////////////////////////////////////////////////////////////
@@ -306,7 +320,8 @@ export class GameBoardComponent {
             isSafe: true,
             isMoveable: false,
             isMoving: false,
-            positionFrom0: 0,
+            nbCommunCaseParcouru: 0,
+            nbPersonalCaseParcouru: 0,
           });
         }
         pawnsList.push(...player.pawns);

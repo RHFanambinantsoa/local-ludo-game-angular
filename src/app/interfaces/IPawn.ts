@@ -13,5 +13,6 @@ export interface IPawn {
   isMoveable?: boolean;
   startCase: ICase;
   entryCase?: ICase;
-  positionFrom0: number;
+  nbCommunCaseParcouru: number;
+  nbPersonalCaseParcouru: number;
 }
