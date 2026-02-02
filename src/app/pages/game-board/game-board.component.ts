@@ -76,9 +76,16 @@ export class GameBoardComponent {
 
   onDiceClicked(event: boolean, playerColor: PLAYER_COLOR) {
     if (!event) return;
-    this.diceValue = this.rollDice();
     this.diceClickable = false;
+    this.diceValue = this.rollDice();
     let pawnsMoveable: IPawn[] = [];
+    let notMoveable = this.pawns.filter(
+      (p) =>
+        p.color == playerColor &&
+        p.currentCase?.type == CASE_TYPE.PERSONAL &&
+        6 - p.nbPersonalCaseParcouru < this.diceValue,
+    );
+    console.log('not', notMoveable);
 
     if (this.diceValue == 6) {
       pawnsMoveable = this.pawns.filter(
@@ -93,6 +100,7 @@ export class GameBoardComponent {
           pw.hasArrived == false,
       );
     }
+
     if (pawnsMoveable.length > 0) {
       pawnsMoveable.forEach((p) => {
         p.isMoveable = true;
@@ -106,6 +114,20 @@ export class GameBoardComponent {
         //   );
         // }
       });
+      if (notMoveable.length > 0) {
+        notMoveable.forEach((p) => {
+          p.isMoveable = false;
+          // if (p.id == 'BLUEpiece0') {
+          //   p.currentCase = { type: CASE_TYPE.COMMON, position: 29 };
+          //   this.placePawn(
+          //     p.id,
+          //     p.color,
+          //     p.currentCase.type,
+          //     p.currentCase.position,
+          //   );
+          // }
+        });
+      }
     } else {
       setTimeout(() => {
         this.nextPlayer();
@@ -377,5 +399,6 @@ export class GameBoardComponent {
 
   private rollDice() {
     return Math.floor(Math.random() * 6) + 1;
+    // return 3;
   }
 }
