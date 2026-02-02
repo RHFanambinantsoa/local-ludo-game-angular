@@ -11,21 +11,14 @@
       <div>
         <app-dice
           *ngIf="isPlayedColor(PLAYER_COLOR.GREEN) && pawnsPlaced"
-          [leftSide]="true"
-          [diceOption]="{
-            value: isTurn(PLAYER_COLOR.GREEN) ? diceValue : 0,
-            isClickable: diceClickable,
-          }"
+          [dice]="createDice(PLAYER_COLOR.GREEN)"
           (diceClicked)="onDiceClicked($event, PLAYER_COLOR.GREEN)"
         ></app-dice>
       </div>
       <div>
         <app-dice
           *ngIf="isPlayedColor(PLAYER_COLOR.YELLOW) && pawnsPlaced"
-          [diceOption]="{
-            value: isTurn(PLAYER_COLOR.YELLOW) ? diceValue : 0,
-            isClickable: diceClickable,
-          }"
+          [dice]="createDice(PLAYER_COLOR.YELLOW)"
           (diceClicked)="onDiceClicked($event, PLAYER_COLOR.YELLOW)"
         ></app-dice>
       </div>
@@ -89,21 +82,14 @@
       <div>
         <app-dice
           *ngIf="isPlayedColor(PLAYER_COLOR.RED) && pawnsPlaced"
-          [leftSide]="true"
-          [diceOption]="{
-            value: isTurn(PLAYER_COLOR.RED) ? diceValue : 0,
-            isClickable: diceClickable,
-          }"
+          [dice]="createDice(PLAYER_COLOR.RED)"
           (diceClicked)="onDiceClicked($event, PLAYER_COLOR.RED)"
         ></app-dice>
       </div>
       <div>
         <app-dice
           *ngIf="isPlayedColor(PLAYER_COLOR.BLUE) && pawnsPlaced"
-          [diceOption]="{
-            value: isTurn(PLAYER_COLOR.BLUE) ? diceValue : 0,
-            isClickable: diceClickable,
-          }"
+          [dice]="createDice(PLAYER_COLOR.BLUE)"
           (diceClicked)="onDiceClicked($event, PLAYER_COLOR.BLUE)"
         ></app-dice>
       </div>

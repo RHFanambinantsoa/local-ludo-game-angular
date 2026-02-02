@@ -11,6 +11,7 @@ import { ICaseStyling } from '../../interfaces/ICaseStyling';
 import { PLAYER_COLOR } from '../../enums/PlayerColor.enum';
 import { NgFor, NgClass, NgIf, NgStyle } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
+import { IDice } from '../../interfaces/IDice';
 
 @Component({
   selector: 'app-dice',
@@ -19,8 +20,7 @@ import { MatIcon } from '@angular/material/icon';
   styleUrl: './dice.component.scss',
 })
 export class DiceComponent {
-  @Input() leftSide: boolean = false;
-  @Input() diceOption: { value?: number; isClickable?: boolean } = {};
+  @Input() dice!: IDice;
 
   @Output() diceClicked = new EventEmitter<boolean>();
   diceRolled: boolean = false;

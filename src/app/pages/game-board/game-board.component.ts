@@ -12,6 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 import { IPlayer } from '../../interfaces/IPlayer';
 import { IGame } from '../../interfaces/IGame';
 import { COURSES } from '../../constants/gameConst';
+import { IDice } from '../../interfaces/IDice';
 
 @Component({
   selector: 'app-game-board',
@@ -135,6 +136,16 @@ export class GameBoardComponent {
 
   isTurn(color: PLAYER_COLOR) {
     return this.turn != color ? false : true;
+  }
+
+  createDice(color: PLAYER_COLOR) {
+    let dice: IDice = {
+      isClickable: this.diceClickable,
+      isLeftSide:
+        color == PLAYER_COLOR.RED || color == PLAYER_COLOR.GREEN ? true : false,
+      value: this.isTurn(color) ? this.diceValue : 0,
+    };
+    return dice;
   }
 
   // FUNCTIONS : MOUVEMENT ou EMPLACEMENT du PION dans le DOM ////////////////////////////
