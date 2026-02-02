@@ -76,14 +76,10 @@ export class GameBoardComponent {
   ngAfterViewInit() {}
 
   onDiceClicked(event: boolean, playerColor: PLAYER_COLOR) {
-    console.log('turn', this.turn);
-    console.log('turnreapet', this.turnReapet);
     if (!event) return;
     if (this.turnReapet && this.turnReapet.turn != this.turn) {
       this.turnReapet = {};
     }
-    console.log('turnreapet2', this.turnReapet);
-
     this.diceClickable = false;
     this.diceValue = this.rollDice();
     let pawnsMoveable: IPawn[] = [];
@@ -118,7 +114,9 @@ export class GameBoardComponent {
           p.isMoveable = false;
         });
       }
-      console.log(pawnsMoveable);
+      if (notMoveable.length > pawnsMoveable.length) {
+        console.log('betsaka hono');
+      }
     } else {
       setTimeout(() => {
         this.nextPlayer();
@@ -137,26 +135,6 @@ export class GameBoardComponent {
     } else {
       this.nextPlayer();
     }
-  }
-
-  private onMoreTurn() {
-    if (
-      this.turnReapet &&
-      this.turnReapet.reapet &&
-      this.turnReapet.reapet == 2
-    ) {
-      this.nextPlayer();
-      return;
-    }
-    this.turnReapet = {
-      turn: this.turn,
-      reapet:
-        this.turnReapet && this.turnReapet.reapet
-          ? this.turnReapet.reapet + 1
-          : 1,
-    };
-    this.diceClickable = true;
-    this.saveChanges(this.game);
   }
 
   updatePawn(pawn: IPawn, diceValue: number) {
@@ -221,7 +199,7 @@ export class GameBoardComponent {
 
   createDice(color: PLAYER_COLOR) {
     let dice: IDice = {
-      isClickable: this.diceClickable,
+      isClickable: this.turn == color ? this.diceClickable : false,
       isLeftSide:
         color == PLAYER_COLOR.RED || color == PLAYER_COLOR.GREEN ? true : false,
       value: this.isTurn(color) ? this.diceValue : 0,
@@ -401,6 +379,27 @@ export class GameBoardComponent {
     }
     this.game.turn = this.turn;
     this.diceClickable = true;
+    this.saveChanges(this.game);
+  }
+
+  private onMoreTurn() {
+    if (
+      this.turnReapet &&
+      this.turnReapet.reapet &&
+      this.turnReapet.reapet == 2
+    ) {
+      this.nextPlayer();
+      return;
+    }
+    this.turnReapet = {
+      turn: this.turn,
+      reapet:
+        this.turnReapet && this.turnReapet.reapet
+          ? this.turnReapet.reapet + 1
+          : 1,
+    };
+    this.diceClickable = true;
+    this.game.turn = this.turn;
     this.saveChanges(this.game);
   }
 
