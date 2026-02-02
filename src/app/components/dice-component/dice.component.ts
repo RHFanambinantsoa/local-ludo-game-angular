@@ -20,7 +20,6 @@ import { MatIcon } from '@angular/material/icon';
 })
 export class DiceComponent {
   @Input() leftSide: boolean = false;
-  @Input() diceValue: number = 0;
   @Input() diceOption: { value?: number; isClickable?: boolean } = {};
 
   @Output() diceClicked = new EventEmitter<boolean>();

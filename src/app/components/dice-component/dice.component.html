@@ -3,7 +3,7 @@
     <div *ngIf="diceOption.value == 6" class="reaction_container">
       <img src="images/LMAO.gif" alt="emoji" />
     </div>
-    <div *ngIf="diceValue" class="arrow">
+    <div *ngIf="diceOption.value && diceOption.isClickable" class="arrow">
       <mat-icon>
         {{
           leftSide
