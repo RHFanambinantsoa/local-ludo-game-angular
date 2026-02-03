@@ -140,7 +140,9 @@ export class GameBoardComponent {
       await this.move(pawn);
       this.celebrate = this.checkEndGame(pawn.color, this.scoreTarge);
       if (this.celebrate) {
+        this.stopAllPawnMovement();
         localStorage.removeItem('game');
+
         return;
       }
       if (pawn.currentCase?.id) {
