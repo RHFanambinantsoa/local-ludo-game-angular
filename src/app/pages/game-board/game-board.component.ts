@@ -129,6 +129,19 @@ export class GameBoardComponent {
       this.setStartCase(pawn);
     } else {
       this.updatePawn(pawn, this.diceValue);
+      if (pawn.currentCase?.id) {
+        const otherOccupant = this.findOtherCaseOccupant(
+          this.pawns,
+          pawn.currentCase?.id,
+          pawn.color,
+        );
+        if (otherOccupant) {
+          otherOccupant.forEach((pa) => {
+            this.goBackHome(pa);
+          });
+        }
+        console.log('ocupant', otherOccupant);
+      }
     }
     if (this.diceValue == 6) {
       this.onMoreTurn();
@@ -178,6 +191,16 @@ export class GameBoardComponent {
       this.placePawn(pw, pw.currentCase?.type, pw.currentCase?.position);
     });
     this.pawnsPlaced = true;
+  }
+
+  findOtherCaseOccupant(
+    pawns: IPawn[],
+    targetCaseId: string,
+    color: PLAYER_COLOR,
+  ) {
+    return pawns.filter(
+      (p) => p.currentCase?.id == targetCaseId && p.color != color,
+    );
   }
 
   isPlayedColor(color: PLAYER_COLOR) {
@@ -394,7 +417,7 @@ export class GameBoardComponent {
   }
 
   private rollDice() {
-    return Math.floor(Math.random() * 6) + 1;
-    // return 6;
+    // return Math.floor(Math.random() * 6) + 1;
+    return 6;
   }
 }
