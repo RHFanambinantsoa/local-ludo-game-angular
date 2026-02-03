@@ -29,6 +29,9 @@ import { ICase } from '../../interfaces/ICase';
   styleUrl: './game-board.component.scss',
 })
 export class GameBoardComponent {
+  //for test
+  testDice = 1;
+
   PLAYER_COLOR = PLAYER_COLOR;
 
   scoreTarge: number = 1;
@@ -83,7 +86,7 @@ export class GameBoardComponent {
       this.turnReapet = {};
     }
     this.diceClickable = false;
-    this.diceValue = this.rollDice();
+    this.diceValue = this.testDice ? this.testDice : this.rollDice();
     let pawnsMoveable: IPawn[] = [];
     let notMoveable = this.pawns.filter(
       (p) =>
