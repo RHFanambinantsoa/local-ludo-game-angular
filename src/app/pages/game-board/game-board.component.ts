@@ -125,6 +125,7 @@ export class GameBoardComponent {
   }
 
   async onPawnClick(pawn: IPawn) {
+    this.stopAllPawnMovement();
     pawn.isMoving = true;
     if (pawn.currentCase?.position && pawn.currentCase?.position < 0) {
       this.setStartCase(pawn);
@@ -147,7 +148,8 @@ export class GameBoardComponent {
         }
       }
     }
-    if (this.diceValue == 6) {
+
+    if (this.diceValue == 6 || pawn.hasArrived) {
       this.onMoreTurn();
     } else {
       this.nextPlayer();
