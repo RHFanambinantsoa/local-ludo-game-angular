@@ -4,7 +4,8 @@
     <button *ngIf="!pawnsPlaced" (click)="placeAllPawns(pawns)">
       {{ isResumable ? "Reprendre la partie" : "Commencer" }}
     </button>
-    <div>
+    <div *ngIf="pawnsPlaced && testMode">
+      <p>Test Mode</p>
       <button (click)="testDice = 1">1</button>
       <button (click)="testDice = 2">2</button>
       <button (click)="testDice = 3">3</button>

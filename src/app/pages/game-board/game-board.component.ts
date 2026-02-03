@@ -30,6 +30,7 @@ import { ICase } from '../../interfaces/ICase';
 })
 export class GameBoardComponent {
   //for test
+  testMode = true;
   testDice = 1;
 
   PLAYER_COLOR = PLAYER_COLOR;
