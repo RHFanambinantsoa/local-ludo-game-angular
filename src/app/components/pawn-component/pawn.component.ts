@@ -15,7 +15,7 @@ import { IPawn } from '../../interfaces/IPawn';
 
 @Component({
   selector: 'app-pawn',
-  imports: [NgIf, NgClass, MatIcon],
+  imports: [NgIf, NgClass, MatIcon, NgStyle],
   templateUrl: './pawn.component.html',
   styleUrl: './pawn.component.scss',
 })

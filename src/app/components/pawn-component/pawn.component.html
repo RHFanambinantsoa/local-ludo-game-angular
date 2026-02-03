@@ -3,6 +3,7 @@
   [disabled]="!pawn.isMoveable"
   [id]="pawn.id"
   (click)="emitClick()"
+  [ngStyle]="{ 'z-index': pawn.isMoveable ? 16 : 1 }"
 >
   <mat-icon
     class="pawn"
