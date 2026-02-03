@@ -31,6 +31,8 @@ import { ICase } from '../../interfaces/ICase';
 export class GameBoardComponent {
   PLAYER_COLOR = PLAYER_COLOR;
 
+  scoreTarge: number = 1;
+
   celebrate: boolean = false;
 
   game!: IGame;
@@ -132,7 +134,11 @@ export class GameBoardComponent {
     } else {
       this.updatePawn(pawn, this.diceValue);
       await this.move(pawn);
-
+      this.celebrate = this.checkEndGame(pawn.color, this.scoreTarge);
+      if (this.celebrate) {
+        localStorage.removeItem('game');
+        return;
+      }
       if (pawn.currentCase?.id) {
         const otherOccupant = this.findOtherCaseOccupant(
           this.pawns,
@@ -467,8 +473,14 @@ export class GameBoardComponent {
     );
   }
 
-  private rollDice() {
-    return Math.floor(Math.random() * 6) + 1;
-    // return ;
+  private checkEndGame(color: PLAYER_COLOR, targetScore: number) {
+    let nbPawnIn = this.pawns.filter(
+      (p) => p.color == color && p.hasArrived,
+    ).length;
+    return nbPawnIn == targetScore;
+  }
+
+  rollDice(value?: number) {
+    return !value ? Math.floor(Math.random() * 6) + 1 : value;
   }
 }
