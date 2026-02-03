@@ -11,7 +11,7 @@ import { CASE_TYPE } from '../../enums/CaseType.enum';
 import { ActivatedRoute } from '@angular/router';
 import { IPlayer } from '../../interfaces/IPlayer';
 import { IGame } from '../../interfaces/IGame';
-import { COURSES } from '../../constants/gameConst';
+import { COURSES, SAFE_CASES } from '../../constants/gameConst';
 import { IDice } from '../../interfaces/IDice';
 import { ICase } from '../../interfaces/ICase';
 
@@ -221,9 +221,13 @@ export class GameBoardComponent {
       const rectCase = casehtml.getBoundingClientRect();
       pawnhtml.style.top = rectCase.top - rectPawn.height / 2 + 'px';
       pawnhtml.style.left = rectCase.left + 'px';
-      if (pawn.currentCase) {
-        pawn.currentCase.id = htmlCaseId;
-      }
+    }
+    if (pawn.currentCase) {
+      pawn.currentCase.id = htmlCaseId;
+      pawn.isSafe =
+        pawn.currentCase.type == CASE_TYPE.COMMON
+          ? SAFE_CASES.includes(pawn.currentCase.position)
+          : true;
     }
   }
 
@@ -261,9 +265,13 @@ export class GameBoardComponent {
   }
 
   private async setStartCase(pawn: IPawn) {
-    await this.placePawn(pawn, pawn.startCase?.type, pawn.startCase?.position);
     pawn.previewsCase = pawn.currentCase;
     pawn.currentCase = pawn.startCase;
+    await this.placePawn(
+      pawn,
+      pawn.currentCase?.type,
+      pawn.currentCase?.position,
+    );
     pawn.nbCommunCaseParcouru = 0;
     pawn.nbPersonalCaseParcouru = 0;
   }
@@ -282,7 +290,7 @@ export class GameBoardComponent {
     let course = COURSES.filter((cours) => cours.color === color)[0];
     let position =
       caseToFind === 'start' ? course.startCommonCase : course.endCommonCase;
-    return { type: CASE_TYPE.COMMON, position: position };
+    return { id: 'C' + position, type: CASE_TYPE.COMMON, position: position };
   }
 
   private generateColorList(players: IPlayer[]) {
