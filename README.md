@@ -1,59 +1,88 @@
-# LudoGame
+## Ludo Game Angular
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.7.
+# Description
 
-## Development server
+Ce projet est un jeu de Ludo développé en Angular.
+Il est entièrement frontend et stocke les données localement (LocalStorage).
+Le site est prévu pour être déployé sur Netlify.
 
-To start a local development server, run:
+## Installation / Développement local
 
-```bash
+# Cloner le projet :
+
+git clone https://github.com/RHFanambinantsoa/local-ludo-game-angular.git
+cd local-ludo-game-angular
+
+# Installer les dépendances :
+
+npm install
+
+# Lancer le serveur Angular :
+
 ng serve
-```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+# Ouvrir dans le navigateur :
 
-## Code scaffolding
+http://localhost:4200
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+# Build pour Netlify
 
-```bash
-ng generate component component-name
-```
+# Ajouter le fichier \_redirects à la racine du projet Angular :
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+src/\_redirects
 
-```bash
-ng generate --help
-```
+# Contenu du fichier \_redirects :
 
-## Building
+/\* /index.html 200
 
-To build the project run:
+# Ajouter \_redirects dans angular.json → section build → options → assets :
 
-```bash
-ng build
-```
+"assets": [
+"src/favicon.ico",
+"src/assets",
+"src/_redirects"
+]
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+# Build de production :
 
-## Running unit tests
+ng build --configuration production
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+# Publier sur Netlify : utiliser le publish directory :
 
-```bash
-ng test
-```
+dist/ludo-game
 
-## Running end-to-end tests
+# Explication \_redirects (Netlify)
 
-For end-to-end (e2e) testing, run:
+Ce fichier permet à Angular (SPA) de gérer toutes les routes côté client.
+Sans lui, si l’utilisateur recharge une page autre que la racine, Netlify renverra 404.
 
-```bash
-ng e2e
-```
+La ligne /\* /index.html 200 signifie :
+/\* → toutes les routes
+/index.html → servir toujours le fichier index.html
+200 → code HTTP OK, même si la route n’existe pas physiquement
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+# Important :
 
-## Additional Resources
+Ne pas mettre de commentaires dans le fichier \_redirects.
+Placer ce fichier à la racine du projet Angular et l’ajouter dans assets dans angular.json.
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+# Déploiement
+
+Le projet est prévu pour un déploiement Netlify.
+
+# Branches :
+
+main → version stable / production
+dev → développement / tests
+
+À chaque push sur GitHub, Netlify rebuild automatiquement le projet.
+
+# Fonctionnalités
+
+    Jouer au Ludo à 2-4 joueurs
+
+    Déplacement des pions
+
+    Sauvegarde automatique dans LocalStorage
+
+    Interface responsive
