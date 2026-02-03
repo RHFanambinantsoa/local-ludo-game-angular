@@ -124,11 +124,14 @@ export class GameBoardComponent {
     }
   }
 
-  onPawnClick(pawn: IPawn) {
+  async onPawnClick(pawn: IPawn) {
+    pawn.isMoving = true;
     if (pawn.currentCase?.position && pawn.currentCase?.position < 0) {
       this.setStartCase(pawn);
     } else {
       this.updatePawn(pawn, this.diceValue);
+      await this.move(pawn);
+
       if (pawn.currentCase?.id) {
         const otherOccupant = this.findOtherCaseOccupant(
           this.pawns,
@@ -142,7 +145,6 @@ export class GameBoardComponent {
             }
           });
         }
-        console.log('ocupant', otherOccupant);
       }
     }
     if (this.diceValue == 6) {
@@ -150,42 +152,7 @@ export class GameBoardComponent {
     } else {
       this.nextPlayer();
     }
-  }
-
-  updatePawn(pawn: IPawn, diceValue: number) {
-    let positionFrom0 = pawn.nbPersonalCaseParcouru
-      ? pawn.nbPersonalCaseParcouru + diceValue
-      : pawn.nbCommunCaseParcouru + diceValue;
-
-    if (positionFrom0 > 50) {
-      pawn.nbPersonalCaseParcouru = positionFrom0 % 50;
-      pawn.nbCommunCaseParcouru = 50;
-    } else {
-      if (pawn.nbPersonalCaseParcouru) {
-        pawn.nbPersonalCaseParcouru =
-          positionFrom0 < 7 ? positionFrom0 : pawn.nbPersonalCaseParcouru;
-      } else {
-        pawn.nbCommunCaseParcouru = positionFrom0;
-      }
-    }
-    if (!pawn.nbPersonalCaseParcouru) {
-      pawn.previewsCase = pawn.currentCase;
-      const casePosition = pawn.nbCommunCaseParcouru + pawn.startCase.position;
-      pawn.currentCase = {
-        type: CASE_TYPE.COMMON,
-        position: casePosition < 53 ? casePosition : casePosition % 52,
-      };
-    } else {
-      pawn.previewsCase = pawn.currentCase;
-      pawn.currentCase = {
-        type: CASE_TYPE.PERSONAL,
-        position: pawn.nbPersonalCaseParcouru,
-      };
-
-      if (pawn.nbPersonalCaseParcouru == 6) pawn.hasArrived = true;
-    }
-
-    this.placePawn(pawn, pawn.currentCase?.type, pawn.currentCase?.position);
+    pawn.isMoving = false;
   }
 
   async placeAllPawns(pawns: IPawn[]) {
@@ -193,16 +160,6 @@ export class GameBoardComponent {
       this.placePawn(pw, pw.currentCase?.type, pw.currentCase?.position);
     });
     this.pawnsPlaced = true;
-  }
-
-  findOtherCaseOccupant(
-    pawns: IPawn[],
-    targetCaseId: string,
-    color: PLAYER_COLOR,
-  ) {
-    return pawns.filter(
-      (p) => p.currentCase?.id == targetCaseId && p.color != color,
-    );
   }
 
   isPlayedColor(color: PLAYER_COLOR) {
@@ -300,6 +257,51 @@ export class GameBoardComponent {
     );
     pawn.nbCommunCaseParcouru = 0;
     pawn.nbPersonalCaseParcouru = 0;
+  }
+
+  async move(pawn: IPawn) {
+    await this.placePawn(
+      pawn,
+      pawn.previewsCase?.type,
+      pawn.previewsCase?.position,
+    );
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    let from = pawn.previewsCase;
+    let to = pawn.currentCase;
+    if (from && to) {
+      if (
+        (from?.type == CASE_TYPE.COMMON && to?.type == CASE_TYPE.COMMON) ||
+        (from?.type == CASE_TYPE.PERSONAL && to?.type == CASE_TYPE.PERSONAL)
+      ) {
+        let current = from.position;
+        let toPosition = to.position;
+        while (current != toPosition) {
+          if (current == 53) {
+            current = 0;
+          }
+          await this.placePawn(pawn, to.type, current + 1);
+          await new Promise((resolve) => setTimeout(resolve, 400));
+          current++;
+        }
+      } else {
+        let current = from?.position;
+        let toPosition = to?.position;
+        while (current != pawn.entryCase?.position) {
+          if (current == 53) {
+            current = 0;
+          }
+          await this.placePawn(pawn, CASE_TYPE.COMMON, current + 1);
+          await new Promise((resolve) => setTimeout(resolve, 400));
+          current++;
+        }
+        current = 0;
+        while (current != toPosition) {
+          await this.placePawn(pawn, CASE_TYPE.PERSONAL, current + 1);
+          await new Promise((resolve) => setTimeout(resolve, 400));
+          current++;
+        }
+      }
+    }
   }
 
   /////////////////////////////////////////////////////////////////
@@ -416,6 +418,51 @@ export class GameBoardComponent {
     this.diceClickable = true;
     this.game.turn = this.turn;
     this.saveChanges(this.game);
+  }
+
+  private updatePawn(pawn: IPawn, diceValue: number) {
+    let positionFrom0 = pawn.nbPersonalCaseParcouru
+      ? pawn.nbPersonalCaseParcouru + diceValue
+      : pawn.nbCommunCaseParcouru + diceValue;
+
+    if (positionFrom0 > 50) {
+      pawn.nbPersonalCaseParcouru = positionFrom0 % 50;
+      pawn.nbCommunCaseParcouru = 50;
+    } else {
+      if (pawn.nbPersonalCaseParcouru) {
+        pawn.nbPersonalCaseParcouru =
+          positionFrom0 < 7 ? positionFrom0 : pawn.nbPersonalCaseParcouru;
+      } else {
+        pawn.nbCommunCaseParcouru = positionFrom0;
+      }
+    }
+    if (!pawn.nbPersonalCaseParcouru) {
+      pawn.previewsCase = pawn.currentCase;
+      const casePosition = pawn.nbCommunCaseParcouru + pawn.startCase.position;
+      pawn.currentCase = {
+        type: CASE_TYPE.COMMON,
+        position: casePosition < 53 ? casePosition : casePosition % 52,
+      };
+    } else {
+      pawn.previewsCase = pawn.currentCase;
+      pawn.currentCase = {
+        type: CASE_TYPE.PERSONAL,
+        position: pawn.nbPersonalCaseParcouru,
+      };
+      if (pawn.nbPersonalCaseParcouru == 6) pawn.hasArrived = true;
+    }
+
+    // this.placePawn(pawn, pawn.currentCase?.type, pawn.currentCase?.position);
+  }
+
+  private findOtherCaseOccupant(
+    pawns: IPawn[],
+    targetCaseId: string,
+    color: PLAYER_COLOR,
+  ) {
+    return pawns.filter(
+      (p) => p.currentCase?.id == targetCaseId && p.color != color,
+    );
   }
 
   private rollDice() {
