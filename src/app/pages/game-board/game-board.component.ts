@@ -137,7 +137,9 @@ export class GameBoardComponent {
         );
         if (otherOccupant) {
           otherOccupant.forEach((pa) => {
-            this.goBackHome(pa);
+            if (!pa.isSafe) {
+              this.goBackHome(pa);
+            }
           });
         }
         console.log('ocupant', otherOccupant);
@@ -417,7 +419,7 @@ export class GameBoardComponent {
   }
 
   private rollDice() {
-    // return Math.floor(Math.random() * 6) + 1;
-    return 6;
+    return Math.floor(Math.random() * 6) + 1;
+    // return ;
   }
 }
