@@ -225,7 +225,8 @@ export class GameBoardComponent {
     if (pawn.currentCase) {
       pawn.currentCase.id = htmlCaseId;
       pawn.isSafe =
-        pawn.currentCase.type == CASE_TYPE.COMMON
+        pawn.currentCase.type == CASE_TYPE.COMMON &&
+        pawn.currentCase.position > 0
           ? SAFE_CASES.includes(pawn.currentCase.position)
           : true;
     }
