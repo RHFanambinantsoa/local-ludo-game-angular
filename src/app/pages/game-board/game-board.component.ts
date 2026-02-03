@@ -122,6 +122,7 @@ export class GameBoardComponent {
           this.nextPlayer();
         }, 1000);
       }
+      this.autoMovePawn();
     } else {
       setTimeout(() => {
         this.nextPlayer();
@@ -143,10 +144,11 @@ export class GameBoardComponent {
         return;
       }
       if (pawn.currentCase?.id) {
-        const otherOccupant = this.findOtherCaseOccupant(
+        const otherOccupant = this.findCaseOccupant(
           this.pawns,
           pawn.currentCase?.id,
           pawn.color,
+          false,
         );
         if (otherOccupant) {
           otherOccupant.forEach((pa) => {
@@ -315,6 +317,34 @@ export class GameBoardComponent {
     }
   }
 
+  /**
+   * deplace un pion automatiquement si il n'y a qu'un seul pion moveable
+   * ou tous les pions moveable sont dans la même case
+   */
+  private autoMovePawn() {
+    let pawnMoveable = this.pawns.filter((p) => p.isMoveable == true);
+    if (pawnMoveable.length == 1) {
+      setTimeout(() => {
+        this.onPawnClick(pawnMoveable[0]);
+      }, 200);
+    } else {
+      if (pawnMoveable[0].currentCase && pawnMoveable[0].currentCase.id) {
+        const pawnsInSameCase = this.findCaseOccupant(
+          pawnMoveable,
+          pawnMoveable[0].currentCase.id,
+          pawnMoveable[0].color,
+          true,
+        );
+
+        if (pawnsInSameCase.length == pawnMoveable.length) {
+          setTimeout(() => {
+            this.onPawnClick(pawnMoveable[0]);
+          }, 100);
+        }
+      }
+    }
+  }
+
   /////////////////////////////////////////////////////////////////
 
   /**
@@ -466,14 +496,19 @@ export class GameBoardComponent {
     // this.placePawn(pawn, pawn.currentCase?.type, pawn.currentCase?.position);
   }
 
-  private findOtherCaseOccupant(
+  private findCaseOccupant(
     pawns: IPawn[],
     targetCaseId: string,
     color: PLAYER_COLOR,
+    sameColor: boolean,
   ) {
-    return pawns.filter(
-      (p) => p.currentCase?.id == targetCaseId && p.color != color,
-    );
+    return sameColor
+      ? pawns.filter(
+          (p) => p.currentCase?.id == targetCaseId && p.color == color,
+        )
+      : pawns.filter(
+          (p) => p.currentCase?.id == targetCaseId && p.color != color,
+        );
   }
 
   private checkEndGame(color: PLAYER_COLOR, targetScore: number) {
