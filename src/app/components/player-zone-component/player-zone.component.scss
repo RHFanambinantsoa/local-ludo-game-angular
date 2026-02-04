@@ -1,0 +1,85 @@
+.player_zone {
+  min-width: 180px;
+  display: flex;
+  flex-direction: row;
+  transform-origin: top left;
+
+  .start_box {
+    flex: none;
+    width: 120px;
+    height: 120px;
+    padding: 20px;
+    > div {
+      background-color: aliceblue;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      .start_point {
+        width: 50%;
+        height: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .point {
+          width: 20px;
+          height: 20px;
+          border-radius: 100%;
+        }
+      }
+    }
+  }
+  .cells_container {
+    display: grid;
+    grid-template-columns: repeat(3, 20px);
+    grid-template-rows: repeat(6, 20px);
+    .cell {
+      background-color: aliceblue;
+      border: 1px solid #8b8686;
+      font-size: 11px;
+      text-align: center;
+      &.colored {
+        background-color: yellow;
+      }
+      &.enter_point {
+        color: yellow;
+      }
+      & > mat-icon {
+        width: 20px;
+        height: 20px;
+        font-size: 19px;
+      }
+    }
+  }
+}
+
+.blink {
+  position: relative;
+  z-index: 1;
+}
+
+.blink::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: aliceblue; /* Couleur du background */
+  z-index: -1;
+  animation-name: blinker-bg;
+  animation-duration: 0.5s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  animation-direction: alternate;
+}
+
+@keyframes blinker-bg {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

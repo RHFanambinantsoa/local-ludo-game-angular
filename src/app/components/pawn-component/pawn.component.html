@@ -1,0 +1,37 @@
+<button
+  class="pawn_container"
+  [disabled]="!pawn.isMoveable"
+  [id]="pawn.id"
+  (click)="emitClick()"
+  [ngStyle]="{ 'z-index': pawn.isMoveable || pawn.isMoving ? 16 : 1 }"
+>
+  <mat-icon
+    class="pawn"
+    [ngClass]="{
+      animate: pawn.isMoveable,
+      move: pawn.isMoving,
+      green: pawn.color == PLAYER_COLOR.GREEN,
+      blue: pawn.color == PLAYER_COLOR.BLUE,
+      yellow: pawn.color == PLAYER_COLOR.YELLOW,
+      red: pawn.color == PLAYER_COLOR.RED,
+    }"
+    >star
+  </mat-icon>
+  <!-- à remplacer ilay mat-icon -->
+  <img
+    *ngIf="pawn.isMoveable"
+    src="images/moveable-pawn.gif"
+    alt=""
+    class="moveable_pawn"
+  />
+  <div
+    *ngIf="!pawn.isMoveable"
+    class="bottom_elips"
+    [ngClass]="{
+      green: pawn.color == PLAYER_COLOR.GREEN,
+      blue: pawn.color == PLAYER_COLOR.BLUE,
+      yellow: pawn.color == PLAYER_COLOR.YELLOW,
+      red: pawn.color == PLAYER_COLOR.RED,
+    }"
+  ></div>
+</button>

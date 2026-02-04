@@ -1,0 +1,109 @@
+.pawn_container {
+  z-index: 2;
+  position: absolute;
+  width: 20px;
+  height: 38px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  border: none;
+  .pawn {
+    color: #918f8f;
+    font-size: 26px;
+    &.animate {
+      animation: shake 3s ease infinite;
+    }
+    &.move {
+      animation: gelatine 0.5s ease infinite;
+    }
+    &.red {
+      text-shadow: 0px 5px 0px red;
+    }
+    &.blue {
+      text-shadow: 0px 5px 0px blue;
+    }
+    &.yellow {
+      text-shadow: 0px 5px 0px yellow;
+    }
+    &.green {
+      text-shadow: 0px 5px 0px green;
+    }
+  }
+  .moveable_pawn {
+    width: 20px;
+    height: 10px;
+  }
+  .bottom_elips {
+    height: 8px;
+    width: 15px;
+    border-radius: 50%;
+    position: relative;
+    bottom: 2px;
+    &.red {
+      border: 2px double red;
+    }
+    &.blue {
+      border: 2px double blue;
+    }
+    &.yellow {
+      border: 2px double yellow;
+    }
+    &.green {
+      border: 2px double green;
+    }
+  }
+}
+
+@keyframes bounce2 {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translate(0);
+  }
+  40% {
+    transform: translateY(-5px);
+  }
+  60% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateY(-2px);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateY(2px);
+  }
+}
+
+@keyframes gelatine {
+  from,
+  to {
+    transform: scale(1, 1);
+  }
+  25% {
+    transform: scale(0.9, 1.1);
+  }
+  50% {
+    transform: scale(1.1, 0.9);
+  }
+  75% {
+    transform: scale(0.95, 1.05);
+  }
+}

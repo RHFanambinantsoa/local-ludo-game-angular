@@ -1,0 +1,108 @@
+<div class="game_container">
+  <div class="button_container">
+    <p>Gameboard</p>
+    <button *ngIf="!pawnsPlaced" (click)="placeAllPawns(pawns)">
+      {{ isResumable ? "Reprendre la partie" : "Commencer" }}
+    </button>
+    <div *ngIf="pawnsPlaced && testMode">
+      <p>Test Mode</p>
+      <button (click)="testDice = 1">1</button>
+      <button (click)="testDice = 2">2</button>
+      <button (click)="testDice = 3">3</button>
+      <button (click)="testDice = 4">4</button>
+      <button (click)="testDice = 5">5</button>
+      <button (click)="testDice = 6">6</button>
+      <p>Next diceValue:{{ testDice }}</p>
+    </div>
+  </div>
+
+  <div class="board_section">
+    <div class="dice_section">
+      <div>
+        <app-dice
+          *ngIf="isPlayedColor(PLAYER_COLOR.GREEN) && pawnsPlaced"
+          [dice]="createDice(PLAYER_COLOR.GREEN)"
+          (diceClicked)="onDiceClicked($event, PLAYER_COLOR.GREEN)"
+        ></app-dice>
+      </div>
+      <div>
+        <app-dice
+          *ngIf="isPlayedColor(PLAYER_COLOR.YELLOW) && pawnsPlaced"
+          [dice]="createDice(PLAYER_COLOR.YELLOW)"
+          (diceClicked)="onDiceClicked($event, PLAYER_COLOR.YELLOW)"
+        ></app-dice>
+      </div>
+    </div>
+    <div class="backdrop">
+      <app-pawn
+        *ngFor="let pawn of pawns"
+        [pawn]="pawn"
+        (pawnClicked)="onPawnClick($event)"
+      />
+
+      <img
+        src="images/celebrate.gif"
+        alt="pinguin in a firework"
+        *ngIf="celebrate"
+        key="gifKey"
+        class="celebrate"
+      />
+      <div class="game_board_container">
+        <div class="green_zone">
+          <app-player-zone
+            [position]="0"
+            [color]="PLAYER_COLOR.GREEN"
+          ></app-player-zone>
+        </div>
+        <div class="yellow_zone">
+          <app-player-zone
+            [position]="1"
+            [color]="PLAYER_COLOR.YELLOW"
+          ></app-player-zone>
+        </div>
+        <div class="arrival_zone">
+          <div class="triangle green">
+            <div id="GREEN6"></div>
+          </div>
+          <div class="triangle yellow">
+            <div id="YELLOW6"></div>
+          </div>
+          <div class="triangle blue">
+            <div id="BLUE6"></div>
+          </div>
+          <div class="triangle red">
+            <div id="RED6"></div>
+          </div>
+        </div>
+        <div class="blue_zone">
+          <app-player-zone
+            [position]="2"
+            [color]="PLAYER_COLOR.BLUE"
+          ></app-player-zone>
+        </div>
+        <div class="red_zone">
+          <app-player-zone
+            [position]="3"
+            [color]="PLAYER_COLOR.RED"
+          ></app-player-zone>
+        </div>
+      </div>
+    </div>
+    <div class="dice_section">
+      <div>
+        <app-dice
+          *ngIf="isPlayedColor(PLAYER_COLOR.RED) && pawnsPlaced"
+          [dice]="createDice(PLAYER_COLOR.RED)"
+          (diceClicked)="onDiceClicked($event, PLAYER_COLOR.RED)"
+        ></app-dice>
+      </div>
+      <div>
+        <app-dice
+          *ngIf="isPlayedColor(PLAYER_COLOR.BLUE) && pawnsPlaced"
+          [dice]="createDice(PLAYER_COLOR.BLUE)"
+          (diceClicked)="onDiceClicked($event, PLAYER_COLOR.BLUE)"
+        ></app-dice>
+      </div>
+    </div>
+  </div>
+</div>

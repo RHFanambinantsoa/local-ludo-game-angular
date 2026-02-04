@@ -1,0 +1,11 @@
+<button (click)="openDialog()">
+  <mat-icon>play_arrow</mat-icon>
+  Jouer
+</button>
+
+<div
+  [ngStyle]="{ 'background-image': 'url(' + AssetsUrls.backgroundImage + ')' }"
+  class="background_container"
+>
+  <app-animated-text></app-animated-text>
+</div>
