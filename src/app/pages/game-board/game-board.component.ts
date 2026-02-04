@@ -30,7 +30,7 @@ import { ICase } from '../../interfaces/ICase';
 })
 export class GameBoardComponent {
   //for test
-  testMode = true;
+  testMode = false;
   testDice = 1;
 
   PLAYER_COLOR = PLAYER_COLOR;
@@ -87,7 +87,7 @@ export class GameBoardComponent {
       this.turnReapet = {};
     }
     this.diceClickable = false;
-    this.diceValue = this.testDice ? this.testDice : this.rollDice();
+    this.diceValue = this.testMode ? this.testDice : this.rollDice();
     let pawnsMoveable: IPawn[] = [];
     let notMoveable = this.pawns.filter(
       (p) =>

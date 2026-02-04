@@ -4,16 +4,21 @@
     <button *ngIf="!pawnsPlaced" (click)="placeAllPawns(pawns)">
       {{ isResumable ? "Reprendre la partie" : "Commencer" }}
     </button>
-    <div *ngIf="pawnsPlaced && testMode">
-      <p>Test Mode</p>
-      <button (click)="testDice = 1">1</button>
-      <button (click)="testDice = 2">2</button>
-      <button (click)="testDice = 3">3</button>
-      <button (click)="testDice = 4">4</button>
-      <button (click)="testDice = 5">5</button>
-      <button (click)="testDice = 6">6</button>
-      <p>Next diceValue:{{ testDice }}</p>
-    </div>
+    <ng-container *ngIf="pawnsPlaced">
+      <p>Valeur du dé : {{ !testMode ? "Aléatoire" : "Choisi par vous" }}</p>
+      <div *ngIf="testMode">
+        <p>Next diceValue:{{ testDice }}</p>
+        <button (click)="testDice = 1">1</button>
+        <button (click)="testDice = 2">2</button>
+        <button (click)="testDice = 3">3</button>
+        <button (click)="testDice = 4">4</button>
+        <button (click)="testDice = 5">5</button>
+        <button (click)="testDice = 6">6</button>
+      </div>
+      <button (click)="testMode = !testMode">
+        Basculer en mode {{ testMode ? "RANDOM" : "TEST" }}
+      </button>
+    </ng-container>
   </div>
 
   <div class="board_section">

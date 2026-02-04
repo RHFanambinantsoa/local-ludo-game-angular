@@ -1,6 +1,7 @@
 p {
   text-align: center;
   margin: 5px;
+  padding: 0;
 }
 .game_container {
   width: 100%;
@@ -10,7 +11,7 @@ p {
   align-items: center;
 
   .button_container {
-    height: 150px;
+    height: 170px;
     display: flex;
     flex-direction: column;
     align-items: center;
