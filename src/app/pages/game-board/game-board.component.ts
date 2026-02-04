@@ -88,36 +88,39 @@ export class GameBoardComponent {
     }
     this.diceClickable = false;
     this.diceValue = this.testMode ? this.testDice : this.rollDice();
-    let pawnsMoveable: IPawn[] = [];
-    let notMoveable = this.pawns.filter(
+    let notArrivedPawns: IPawn[] = [];
+    let personalNotMoveablePawns = this.pawns.filter(
       (p) =>
         p.color == playerColor &&
         p.currentCase?.type == CASE_TYPE.PERSONAL &&
         6 - p.nbPersonalCaseParcouru < this.diceValue,
     );
     if (this.diceValue == 6) {
-      pawnsMoveable = this.pawns.filter(
-        (p) => p.color == playerColor && p.hasArrived == false,
+      notArrivedPawns = this.pawns.filter(
+        (p) => p.color == playerColor && !p.hasArrived,
       );
     } else {
-      pawnsMoveable = this.pawns.filter(
+      notArrivedPawns = this.pawns.filter(
         (pw) =>
           pw.color == playerColor &&
           pw.currentCase?.position &&
           pw.currentCase?.position > 0 &&
-          pw.hasArrived == false,
+          !pw.hasArrived,
       );
     }
-    if (pawnsMoveable.length > 0) {
-      pawnsMoveable.forEach((p) => {
+    if (notArrivedPawns.length > 0) {
+      notArrivedPawns.forEach((p) => {
         p.isMoveable = true;
       });
-      if (notMoveable.length > 0) {
-        notMoveable.forEach((p) => {
+      if (personalNotMoveablePawns.length > 0) {
+        personalNotMoveablePawns.forEach((p) => {
           p.isMoveable = false;
         });
       }
-      if (notMoveable.length == 4) {
+      const pawnsMoveable = this.pawns.filter(
+        (pw) => pw.color == playerColor && pw.isMoveable,
+      );
+      if (pawnsMoveable.length == 0) {
         //tsisy afaka ahetsika intsony ny pion anaky 4 izany
         setTimeout(() => {
           this.nextPlayer();
