@@ -1,0 +1,54 @@
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  min-width: 100px;
+  margin: 0 5px;
+
+  &.btn-validate {
+    background-color: #4caf50; /* vert */
+    color: white;
+  }
+  &.btn-validate:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  }
+  &.btn-cancel {
+    background-color: #f44336; /* rouge */
+    color: white;
+  }
+
+  &.btn-cancel:hover {
+    background-color: #e53935;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  }
+}
+mat-dialog-content {
+  padding: 20px;
+  > mat-dialog-actions {
+    padding: 20px 0;
+  }
+}
+mat-icon {
+  color: green;
+  &.yellow {
+    color: yellow;
+  }
+  &.red {
+    color: red;
+  }
+  &.blue {
+    color: blue;
+  }
+}
+
+span {
+  font-size: 16px;
+  font-weight: 500;
+}

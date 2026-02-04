@@ -5,5 +5,5 @@ export interface IGame {
   id: string;
   players: IPlayer[];
   turn: PLAYER_COLOR;
-  target: number;
+  scoreTarget: number;
 }

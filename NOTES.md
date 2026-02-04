@@ -63,11 +63,33 @@ Dans Deploy Seeting --> branches and deploy context
 - Recharger la page
   et Boom → plus de 404
 
+---
+
 ## 2. Angular
 
 - Utilisation de LocalStorage pour sauvegarder les pions
+
 - Configuration des assets dans angular.json
+  "assets": [
+  {
+  "glob": "**/*",
+  "input": "public"
+  }
+  ],
+  glob → indique quels fichiers copier depuis le dossier input
+  "\*_/_" = tous les fichiers et sous-dossiers récursivement
+  input → dossier source dans ton projet
+  public → Angular va prendre tous les fichiers dans src/public
+
 - Structure du projet Angular pour un SPA
+
+### angular Material
+
+Angular Material compare type + valeur (===)
+[value]="1" = nombre 1
+value="1" = string "1"
+
+---
 
 ## 3. Ce que j'ai appris sur Git
 
@@ -86,6 +108,8 @@ Dans Deploy Seeting --> branches and deploy context
   - `git commit -m "Fix redirects for Netlify"` : fait un commit (normalement je sais déjà ça)
   - `git push origin main` : Envoie la branche main locale vers GitHub (le dépôt distant).
 
+---
+
 ## 4. Problèmes rencontrés et storyTime
 
 ### the fucking erreur 404 sur Netlify à cause de ce foutu publish directory
@@ -93,6 +117,8 @@ Dans Deploy Seeting --> branches and deploy context
 - ça m'a pris des heures à résoudres. j'ai pensé que le problème venait de mes chemins dans assests de angular.json mais en fait pas du tout. c'était le chemin dans netlify qui n'était pas correcte.
 - chatGPT n'a pas beaucoup aidé non plus.
 - j'ai du aller sur le support de netlify, demander à l'IA de netlify (merci petite, tu m'as beaucoup aidé)
+
+---
 
 ## 5. Idées futures
 

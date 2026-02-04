@@ -35,11 +35,12 @@ export class GameBoardComponent {
 
   PLAYER_COLOR = PLAYER_COLOR;
 
-  scoreTarge: number = 1;
+  scoreTarget: number = 1;
 
   celebrate: boolean = false;
 
   game!: IGame;
+
   diceValue: number = 1;
   diceClickable: boolean = true;
   turn!: PLAYER_COLOR;
@@ -64,12 +65,13 @@ export class GameBoardComponent {
       // créer un tableau de pions d'après le nombre de joueurs reçu
       //recupérer le nombre de joueurs
       this.route.queryParams.subscribe((params) => {
-        this.nbPlayers = Number(params['players']);
+        this.nbPlayers = Number(params['nbPlayers']);
+        this.scoreTarget = Number(params['scoreTarget']);
       });
       this.game = {
         id: `LudoGame${this.nbPlayers}Joueurs`,
         players: this.generatePlayers(this.nbPlayers),
-        target: 4,
+        scoreTarget: this.scoreTarget,
         turn: PLAYER_COLOR.GREEN,
       };
     }
@@ -142,7 +144,7 @@ export class GameBoardComponent {
     } else {
       this.updatePawn(pawn, this.diceValue);
       await this.move(pawn);
-      this.celebrate = this.checkEndGame(pawn.color, this.scoreTarge);
+      this.celebrate = this.checkEndGame(pawn.color, this.scoreTarget);
       if (this.celebrate) {
         this.stopAllPawnMovement();
         localStorage.removeItem('game');
@@ -504,24 +506,20 @@ export class GameBoardComponent {
 
   private findCaseOccupant(
     pawns: IPawn[],
-    targetCaseId: string,
+    caseId: string,
     color: PLAYER_COLOR,
     sameColor: boolean,
   ) {
     return sameColor
-      ? pawns.filter(
-          (p) => p.currentCase?.id == targetCaseId && p.color == color,
-        )
-      : pawns.filter(
-          (p) => p.currentCase?.id == targetCaseId && p.color != color,
-        );
+      ? pawns.filter((p) => p.currentCase?.id == caseId && p.color == color)
+      : pawns.filter((p) => p.currentCase?.id == caseId && p.color != color);
   }
 
-  private checkEndGame(color: PLAYER_COLOR, targetScore: number) {
+  private checkEndGame(color: PLAYER_COLOR, scoreTarget: number) {
     let nbPawnIn = this.pawns.filter(
       (p) => p.color == color && p.hasArrived,
     ).length;
-    return nbPawnIn == targetScore;
+    return nbPawnIn == scoreTarget;
   }
 
   rollDice(value?: number) {

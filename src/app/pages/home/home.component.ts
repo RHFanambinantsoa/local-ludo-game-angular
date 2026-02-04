@@ -18,7 +18,7 @@ import {
   MatDialogRef,
   MatDialogTitle,
 } from '@angular/material/dialog';
-import { ChoosePlayersModalComponent } from '../../components/choose-players-modal/choose-players-modal.component';
+import { ChooseOptionsModalComponent } from '../../components/choose-options-modal/choose-options-modal.component';
 import { AnimatedTextComponent } from '../../components/animated-text-component/animated-text.component';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -37,26 +37,29 @@ export class HomeComponent {
   AssetsUrls = AssetsUrls;
 
   readonly dialog = inject(MatDialog);
-  readonly players = signal('');
+  options = {
+    nbPlayers: 4,
+    scoreTarget: 4,
+  };
 
   constructor(private router: Router) {}
 
   ngOnInit() {}
 
   openDialog(): void {
-    const dialogRef = this.dialog.open(ChoosePlayersModalComponent, {
+    const dialogRef = this.dialog.open(ChooseOptionsModalComponent, {
       autoFocus: true,
       restoreFocus: true,
-      data: { players: this.players },
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result !== undefined) {
-        console.log(result);
-
-        this.players.set(result);
-        //naviguer vers gameboard en ajoutant le parametre nbplayers
+        this.options = result;
+        //naviguer vers gameboard en ajoutant le parametre nbplayers et scoreTarget
         this.router.navigate(['/gameboard'], {
-          queryParams: { players: this.players() },
+          queryParams: {
+            nbPlayers: this.options.nbPlayers,
+            scoreTarget: this.options.scoreTarget,
+          },
         });
       }
     });
