@@ -25,46 +25,9 @@ ng serve
 
 http://localhost:4200
 
-# Build pour Netlify
-
-# Ajouter le fichier \_redirects à la racine du projet Angular :
-
-src/\_redirects
-
-# Contenu du fichier \_redirects :
-
-/\* /index.html 200
-
-# Ajouter \_redirects dans angular.json → section build → options → assets :
-
-"assets": [
-"src/favicon.ico",
-"src/assets",
-"src/_redirects"
-]
-
 # Build de production :
 
 ng build --configuration production
-
-# Publier sur Netlify : utiliser le publish directory :
-
-dist/ludo-game
-
-# Explication \_redirects (Netlify)
-
-Ce fichier permet à Angular (SPA) de gérer toutes les routes côté client.
-Sans lui, si l’utilisateur recharge une page autre que la racine, Netlify renverra 404.
-
-La ligne /\* /index.html 200 signifie :
-/\* → toutes les routes
-/index.html → servir toujours le fichier index.html
-200 → code HTTP OK, même si la route n’existe pas physiquement
-
-# Important :
-
-Ne pas mettre de commentaires dans le fichier \_redirects.
-Placer ce fichier à la racine du projet Angular et l’ajouter dans assets dans angular.json.
 
 # Déploiement
 
