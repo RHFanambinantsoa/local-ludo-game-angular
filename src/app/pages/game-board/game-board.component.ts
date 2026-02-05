@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -8,12 +8,14 @@ import { DiceComponent } from '../../components/dice-component/dice.component';
 import { PawnComponent } from '../../components/pawn-component/pawn.component';
 import { IPawn } from '../../interfaces/IPawn';
 import { CASE_TYPE } from '../../enums/CaseType.enum';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IPlayer } from '../../interfaces/IPlayer';
 import { IGame } from '../../interfaces/IGame';
 import { COURSES, SAFE_CASES } from '../../constants/gameConst';
 import { IDice } from '../../interfaces/IDice';
 import { ICase } from '../../interfaces/ICase';
+import { MatDialog } from '@angular/material/dialog';
+import { ChooseOptionsModalComponent } from '../../components/choose-options-modal/choose-options-modal.component';
 
 @Component({
   selector: 'app-game-board',
@@ -29,6 +31,8 @@ import { ICase } from '../../interfaces/ICase';
   styleUrl: './game-board.component.scss',
 })
 export class GameBoardComponent {
+  readonly dialog = inject(MatDialog);
+
   //for test
   testMode = false;
   testDice = 1;
@@ -53,7 +57,10 @@ export class GameBoardComponent {
   isResumable: boolean = false;
   pawnsPlaced: boolean = false;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+  ) {}
 
   async ngOnInit() {
     //verifie si il n'y a pas de partie inachevée dans le localStorage
@@ -82,6 +89,42 @@ export class GameBoardComponent {
   }
 
   ngAfterViewInit() {}
+
+  async startNewGame() {
+    let options = {
+      nbPlayers: 4,
+      scoreTarget: 4,
+    };
+    const dialogRef = this.dialog.open(ChooseOptionsModalComponent, {
+      autoFocus: true,
+      restoreFocus: true,
+    });
+    dialogRef.afterClosed().subscribe(async (result) => {
+      if (result !== undefined) {
+        options = result;
+        this.router.navigate([], {
+          queryParams: {
+            nbPlayers: options.nbPlayers,
+            scoreTarget: options.scoreTarget,
+          },
+        });
+        localStorage.removeItem('game');
+        this.isResumable = false;
+        this.pawnsPlaced = false;
+        this.game = {
+          id: `LudoGame${options.nbPlayers}Joueurs`,
+          players: this.generatePlayers(options.nbPlayers),
+          scoreTarget: options.scoreTarget,
+          turn: PLAYER_COLOR.GREEN,
+        };
+        this.pawns = this.generatePawnsList(this.game.players);
+        this.playedColors = this.generateColorList(this.game.players);
+        this.turn = this.game.turn;
+        this.diceValue = 1;
+        this.saveChanges(this.game);
+      }
+    });
+  }
 
   onDiceClicked(event: boolean, playerColor: PLAYER_COLOR) {
     if (!event) return;

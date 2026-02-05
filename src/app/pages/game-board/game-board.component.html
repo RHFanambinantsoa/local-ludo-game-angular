@@ -2,8 +2,11 @@
   <div class="button_container">
     <p>Gameboard</p>
     <button *ngIf="!pawnsPlaced" (click)="placeAllPawns(pawns)">
-      {{ isResumable ? "Reprendre la partie" : "Commencer" }}
+      {{
+        isResumable ? "Reprendre la partie précédente" : "Commencer la partie"
+      }}
     </button>
+
     <ng-container *ngIf="pawnsPlaced">
       <p>Valeur du dé : {{ !testMode ? "Aléatoire" : "Choisi par vous" }}</p>
       <div *ngIf="testMode">
@@ -110,4 +113,8 @@
       </div>
     </div>
   </div>
+
+  <button style="margin: 10px" (click)="startNewGame()">
+    Recommencer une nouvelle partie
+  </button>
 </div>
