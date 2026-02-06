@@ -3,6 +3,7 @@ p {
   margin: 5px;
   padding: 0;
 }
+
 .game_container {
   width: 100%;
   height: 100%;
@@ -31,13 +32,15 @@ p {
     border: 1px solid rgb(219, 49, 219);
     padding: 2px;
     border-radius: 5px;
+    margin: 10px 0;
+
     .dice_section {
       width: 100%;
       height: 65px;
       display: flex;
       align-items: end;
       justify-content: space-between;
-      background-color: #d5e7e7;
+      background: inherit;
       .arrow {
         font-size: 60px;
         color: rgb(163 131 6);
@@ -49,11 +52,25 @@ p {
     .backdrop {
       width: 300px;
       height: 300px;
-      .celebrate {
+      background: inherit;
+      .play_button_container {
         position: absolute;
         width: 300px;
+        height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         z-index: 2;
+        background: inherit;
+
+        > img {
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          z-index: 2;
+        }
       }
+
       .game_board_container {
         width: 100%;
         height: 100%;
@@ -124,6 +141,33 @@ p {
       }
     }
   }
+}
+
+.game_btn {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* espace entre l'icône et le texte */
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Hover effect */
+.game-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.25);
+}
+
+/* Taille de l'icône */
+.game-btn mat-icon {
+  font-size: 20px;
 }
 
 @keyframes moveArrow {

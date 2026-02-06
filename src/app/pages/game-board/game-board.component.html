@@ -1,14 +1,9 @@
 <div class="game_container">
   <div class="button_container">
     <p>Gameboard</p>
-    <button *ngIf="!pawnsPlaced" (click)="placeAllPawns(pawns)">
-      {{
-        isResumable ? "Reprendre la partie précédente" : "Commencer la partie"
-      }}
-    </button>
 
     <ng-container *ngIf="pawnsPlaced">
-      <p>Valeur du dé : {{ !testMode ? "Aléatoire" : "Choisi par vous" }}</p>
+      <p>Valeur du dé : {{ !testMode ? "Aléatoire" : "Choisie par vous" }}</p>
       <div *ngIf="testMode">
         <p>Next diceValue:{{ testDice }}</p>
         <button (click)="testDice = 1">1</button>
@@ -24,7 +19,12 @@
     </ng-container>
   </div>
 
-  <div class="board_section">
+  <div
+    class="board_section"
+    [ngStyle]="{
+      background: !pawnsPlaced || celebrate ? '#00000096' : 'transparent',
+    }"
+  >
     <div class="dice_section">
       <div>
         <app-dice
@@ -47,14 +47,23 @@
         [pawn]="pawn"
         (pawnClicked)="onPawnClick($event)"
       />
+      <div class="play_button_container">
+        <button
+          class="game_btn"
+          *ngIf="!pawnsPlaced"
+          (click)="placeAllPawns(pawns)"
+        >
+          <mat-icon>{{ isResumable ? "restore" : "play_arrow" }} </mat-icon>
+          {{ isResumable ? "Reprendre" : "Commencer" }}
+        </button>
+        <img
+          src="images/celebrate.gif"
+          alt="pinguin in a firework"
+          *ngIf="celebrate"
+          key="gifKey"
+        />
+      </div>
 
-      <img
-        src="images/celebrate.gif"
-        alt="pinguin in a firework"
-        *ngIf="celebrate"
-        key="gifKey"
-        class="celebrate"
-      />
       <div class="game_board_container">
         <div class="green_zone">
           <app-player-zone
@@ -114,7 +123,8 @@
     </div>
   </div>
 
-  <button style="margin: 10px" (click)="startNewGame()">
-    Recommencer une nouvelle partie
+  <button class="game_btn" (click)="startNewGame()">
+    <mat-icon>add_circle </mat-icon>
+    Nouvelle partie
   </button>
 </div>
