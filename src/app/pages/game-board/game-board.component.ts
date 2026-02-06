@@ -39,8 +39,6 @@ export class GameBoardComponent {
 
   PLAYER_COLOR = PLAYER_COLOR;
 
-  scoreTarget: number = 1;
-
   celebrate: boolean = false;
 
   game!: IGame;
@@ -50,7 +48,6 @@ export class GameBoardComponent {
   turn!: PLAYER_COLOR;
   turnReapet: { turn?: PLAYER_COLOR; reapet?: number } = {};
 
-  nbPlayers: number = 0;
   pawns: IPawn[] = [];
   playedColors: PLAYER_COLOR[] = [];
 
@@ -66,19 +63,24 @@ export class GameBoardComponent {
     //verifie si il n'y a pas de partie inachevée dans le localStorage
     const storedPawns = localStorage.getItem('game');
     if (storedPawns) {
-      this.isResumable = true;
-      this.game = JSON.parse(storedPawns);
+      const gameId = JSON.parse(storedPawns).id;
+      if (gameId) {
+        this.isResumable = true;
+        this.game = JSON.parse(storedPawns);
+      }
     } else {
       // créer un tableau de pions d'après le nombre de joueurs reçu
       //recupérer le nombre de joueurs
+      let scoreTarget: number = 0;
+      let nbPlayers: number = 0;
       this.route.queryParams.subscribe((params) => {
-        this.nbPlayers = Number(params['nbPlayers']);
-        this.scoreTarget = Number(params['scoreTarget']);
+        nbPlayers = Number(params['nbPlayers']);
+        scoreTarget = Number(params['scoreTarget']);
       });
       this.game = {
-        id: `LudoGame${this.nbPlayers}Joueurs`,
-        players: this.generatePlayers(this.nbPlayers),
-        scoreTarget: this.scoreTarget,
+        id: `LudoGame${nbPlayers}Joueurs`,
+        players: this.generatePlayers(nbPlayers),
+        scoreTarget: scoreTarget,
         turn: PLAYER_COLOR.GREEN,
       };
     }
@@ -111,6 +113,7 @@ export class GameBoardComponent {
         localStorage.removeItem('game');
         this.isResumable = false;
         this.pawnsPlaced = false;
+        this.celebrate = false;
         this.game = {
           id: `LudoGame${options.nbPlayers}Joueurs`,
           players: this.generatePlayers(options.nbPlayers),
@@ -187,11 +190,11 @@ export class GameBoardComponent {
     } else {
       this.updatePawn(pawn, this.diceValue);
       await this.move(pawn);
-      this.celebrate = this.checkEndGame(pawn.color, this.scoreTarget);
+      this.celebrate = this.checkEndGame(pawn.color, this.game.scoreTarget);
       if (this.celebrate) {
         this.stopAllPawnMovement();
-        localStorage.removeItem('game');
-
+        this.resetVariables();
+        this.saveChanges(this.game);
         return;
       }
       if (pawn.currentCase?.id) {
@@ -202,9 +205,10 @@ export class GameBoardComponent {
           false,
         );
         if (otherOccupant) {
-          otherOccupant.forEach((pa) => {
+          otherOccupant.forEach(async (pa) => {
             if (!pa.isSafe) {
-              this.goBackHome(pa);
+              await this.goBackHome(pa);
+              this.saveChanges(this.game);
             }
           });
         }
@@ -224,6 +228,12 @@ export class GameBoardComponent {
       this.placePawn(pw, pw.currentCase?.type, pw.currentCase?.position);
     });
     this.pawnsPlaced = true;
+  }
+
+  resetVariables() {
+    this.isResumable = false;
+    this.game.id = '';
+    this.playedColors = [];
   }
 
   isPlayedColor(color: PLAYER_COLOR) {
@@ -329,7 +339,7 @@ export class GameBoardComponent {
       pawn.previewsCase?.type,
       pawn.previewsCase?.position,
     );
-    await new Promise((resolve) => setTimeout(resolve, 400));
+    await new Promise((resolve) => setTimeout(resolve, 200));
     let from = pawn.previewsCase;
     let to = pawn.currentCase;
     if (from && to) {

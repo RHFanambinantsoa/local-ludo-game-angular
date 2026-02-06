@@ -50,7 +50,7 @@
       <div class="play_button_container">
         <button
           class="game_btn"
-          *ngIf="!pawnsPlaced"
+          *ngIf="!pawnsPlaced && game"
           (click)="placeAllPawns(pawns)"
         >
           <mat-icon>{{ isResumable ? "restore" : "play_arrow" }} </mat-icon>
